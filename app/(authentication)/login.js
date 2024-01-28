@@ -15,7 +15,7 @@ const login = () => {
 
             <KeyboardAvoidingView>
                 <View style={{ alignItem: "center" }}>
-                    <Text style={{ fontSize: 17, fontweight: "bold" }}> Login in to your acc</Text>
+                    <Text > Login in to your acc</Text>
                 </View>
 
                 <View>
