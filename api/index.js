@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 
+
 const app = express();
 const port = 3000;
 const cors = require("cors");
@@ -56,6 +57,34 @@ app.post("/register", async (req, res) => {
   } catch (error) {
     console.log("Error registering user", error);
     res.status(500).json({ message: "Registration failed" });
+  }
+});
+
+const generateSecretKey = () => {
+  const secretKey = crypto.randomBytes(32).toString("hex");
+
+  return secretKey;
+};
+
+const secretKey=generateSecretKey();
+
+
+// login poinst
+app.post("/register", async (req, res) => {
+  try {
+    const {email,password} = req.body;
+
+    const user = await User.findOne({email});
+
+    if(user.password !=password){
+      return res.json({message:"password is incorrect"}) ;
+    }
+    const token = jwt.sign({userI:user._id},secretKey);
+    console.log(token);
+    
+  } catch (error) {
+    console.log(error);
+    
   }
 });
 
