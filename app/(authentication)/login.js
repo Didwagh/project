@@ -1,25 +1,84 @@
-import { StyleSheet, Text, View, KeyboardAvoidingView, Pressable,TextInput } from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { Fontisto } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { useState } from 'react';
-import { useRouter } from 'expo-router';
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Image,
+  KeyboardAvoidingView,
+  TextInput,
+  Pressable,
+} from "react-native";
+import React, { useState,useEffect } from "react";
+import { AntDesign } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const login = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const router = useRouter();
-    return (
-        <SafeAreaView style={{ margin: 20 }}>
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+        try{
+            const token = await AsyncStorage.getItem("authToken");
+            if(token){
+                router.replace("/(tabs)/home")
+            }
+        } catch(error){
+            console.log(error);
+        }
+    }
 
-            <KeyboardAvoidingView>
-                <View style={{alignSelf: "center" }}>
-                    <Text > Login in to your acc</Text>
-                </View>
+    checkLoginStatus();
+  },[])
+  const handleLogin = () => {
+      const user = {
+          email: email,
+          password: password
+      }
 
-                <View>
-                <View
+      axios.post("http://localhost:3000/login", user).then((response) => {
+        res.send('did my best')
+          
+          const token = response.data.token;
+          AsyncStorage.setItem("authToken",token);
+          console.log(response);
+          router.replace("/(tabs)/home")
+          // console.log("is triggered")
+      })
+  }
+  return (
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
+    >
+      <View>
+        <Image
+          style={{ width: 150, height: 100, resizeMode: "contain" }}
+          source={{
+            uri: "https://www.freepnglogos.com/uploads/linkedin-logo-transparent-png-25.png",
+          }}
+        />
+      </View>
+
+      <KeyboardAvoidingView>
+        <View style={{ alignItems: "center" }}>
+          <Text
+            style={{
+              fontSize: 17,
+              fontWeight: "bold",
+              marginTop: 12,
+              color: "#041E42",
+            }}
+          >
+            Log in to your Account
+          </Text>
+        </View>
+
+        <View style={{ marginTop: 70 }}>
+          <View
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -30,7 +89,7 @@ const login = () => {
               marginTop: 30,
             }}
           >
-            <Fontisto
+            <MaterialIcons
               style={{ marginLeft: 8 }}
               name="email"
               size={24}
@@ -49,8 +108,8 @@ const login = () => {
             />
           </View>
 
-
-          <View
+          <View style={{ marginTop: 10 }}>
+            <View
               style={{
                 flexDirection: "row",
                 alignItems: "center",
@@ -80,13 +139,29 @@ const login = () => {
                 placeholder="enter your Password"
               />
             </View>
+          </View>
 
+          <View
+            style={{
+              marginTop: 12,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text>Keep me logged in</Text>
 
-                    <Pressable
-        //  onPress={handleRegister}
+            <Text style={{ color: "#007FFF", fontWeight: "500" }}>
+              Forgot Password
+            </Text>
+          </View>
+
+          <View style={{ marginTop: 80 }} />
+
+          <Pressable
+          onPress={handleLogin}
             style={{
               width: 200,
-              marginVertical: 20,
               backgroundColor: "#0072b1",
               borderRadius: 6,
               marginLeft: "auto",
@@ -102,28 +177,24 @@ const login = () => {
                 fontWeight: "bold",
               }}
             >
-              Register
+              Login
             </Text>
           </Pressable>
-          
-          <Pressable 
-          style={{ alignSelf:"center",
-          marginVertical: 10,
-          }}
-          onPress={() =>  router.replace('/register')}>
-                        <Text>I'm pressable!</Text>
-                    </Pressable>
 
+          <Pressable
+            onPress={() => router.replace("/register")}
+            style={{ marginTop: 15 }}
+          >
+            <Text style={{ textAlign: "center", color: "gray", fontSize: 16 }}>
+              Don't have an account? Sign Up
+            </Text>
+          </Pressable>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
+};
 
-                </View>
+export default login;
 
-
-            </KeyboardAvoidingView>
-        </SafeAreaView>
-
-    )
-}
-
-export default login
-
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

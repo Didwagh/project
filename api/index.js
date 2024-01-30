@@ -15,9 +15,9 @@ app.use(bodyParser.json());
 const jwt = require("jsonwebtoken");
 
 mongoose.connect("mongodb://127.0.0.1:27017/myapp", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -66,29 +66,50 @@ const generateSecretKey = () => {
   return secretKey;
 };
 
-const secretKey=generateSecretKey();
+const secretKey = generateSecretKey();
 
 
 // login poinst
-app.post("/register", async (req, res) => {
+
+app.post("/login", async (req, res) => {
   try {
-    const {email,password} = req.body;
+    const { email, password } = req.body;
 
-    const user = await User.findOne({email});
+    const user = await User.findOne({ email });
 
-    if(user.password !=password){
-      return res.json({message:"password is incorrect"}) ;
+    if (user.password != password) {
+      return res.json({ message: "password is incorrect" });
     }
-    const token = jwt.sign({userI:user._id},secretKey);
-    console.log(token);
-    
+    const token = jwt.sign({ userI: user._id }, secretKey);
+    // console.log(token);
+
   } catch (error) {
     console.log(error);
-    
+
   }
 });
 
 
 
-  
+// app.get("/login", async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+
+//     const user = await User.findOne({ email });
+
+//     if (user.password != password) {
+//       return res.json({ message: "password is incorrect" });
+//     }
+//     const token = jwt.sign({ userI: user._id }, secretKey);
+//     // console.log(token);
+
+//   } catch (error) {
+//     console.log(error);
+
+//   }
+// });
+
+
+
+
 
