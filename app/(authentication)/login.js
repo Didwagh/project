@@ -35,14 +35,15 @@ const login = () => {
     checkLoginStatus();
   },[])
   const handleLogin = () => {
+    console.log("log in function triggered")
       const user = {
           email: email,
           password: password
       }
+      console.log("just before axios")
 
-      axios.post("http://localhost:3000/login", user).then((response) => {
-        res.send('did my best')
-          
+      axios.post("http://localhost:8081/login", user).then((response) => {    
+        console.log("axios is triggered")
           const token = response.data.token;
           AsyncStorage.setItem("authToken",token);
           console.log(response);

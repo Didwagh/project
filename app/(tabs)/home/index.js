@@ -4,7 +4,7 @@ import React from 'react'
 const index = () => {
   return (
     <View>
-      <Text>ruh</Text>
+      <Text>not so ruh any more huh</Text>
     </View>
   )
 }
