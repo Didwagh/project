@@ -34,6 +34,7 @@ const login = () => {
 
     checkLoginStatus();
   },[])
+
   const handleLogin = () => {
     console.log("log in function triggered")
       const user = {

@@ -7,7 +7,8 @@ import {
   Pressable,
   KeyboardAvoidingView,
   TextInput,
-  Alert
+  Alert,
+  ScrollView
 } from "react-native";
 import React, { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
