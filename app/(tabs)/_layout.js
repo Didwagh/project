@@ -9,9 +9,9 @@ export default function Layout() {
             <Tabs.Screen name="home" option={{
                 tabBarLabel: "Home",
                 headerShown: false,
-                tabBarIcon:({})=>(  
+                tabBarIcon:({focused})=> focused?(  
                     <Entypo name="home" size={24} color="black" />
-                )  
+                ) : (   <Entypo name="home" size={24} color="black" />)
             }} />
 
 

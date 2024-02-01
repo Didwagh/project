@@ -91,25 +91,45 @@ app.post("/login", async (req, res) => {
 });
 
 
+//end point to get user profile
+app.get("/profile/:userId", async (req, res) => {
+  try {
 
-// app.get("/login", async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
 
-//     const user = await User.findOne({ email });
+    if (!user) {
+      console.log("usr not found");
+    }
 
-//     if (user.password != password) {
-//       return res.json({ message: "password is incorrect" });
-//     }
-//     const token = jwt.sign({ userI: user._id }, secretKey);
-//     // console.log(token);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
-//   } catch (error) {
-//     console.log(error);
+//end point to get all user and connections
+app.get("/users/:userId", async (req, res) => {
+  try {
 
-//   }
-// });
+    const loggedInUserId = req.params.userId;
+    const loggedInuser = await User.findById(loggedInUserId).populate("connections", "_id");
+    if (!loggedInuser) {
+      return res.json({ message: "logged in user not found" })
+    }
 
+    //get ID of people who are connected;
+
+    const connectedUserIds = loggedInuser.connectionRequests.map((connection) => connection._id)
+    //find user who are not connect and id
+
+    const user = await User.find({
+      _id: { $ne: loggedInUserId, $nin: connectedUserIds }
+    });
+
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 
 
