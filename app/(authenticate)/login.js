@@ -4,49 +4,50 @@ import {
   View,
   SafeAreaView,
   Image,
-  Pressable,
   KeyboardAvoidingView,
   TextInput,
-  Alert,
-  ScrollView
+  Pressable,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Entypo } from '@expo/vector-icons';
-import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import axios from "axios"
+import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const register = () => {
+
+const login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [image, setImage] = useState("");
   const router = useRouter();
-  const handleRegister = () => {
-      console.log("hello")
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+        try{
+            const token = await AsyncStorage.getItem("authToken");
+            if(token){
+                router.replace("/(tabs)/home")
+            }
+        } catch(error){
+            console.log(error);
+        }
+    }
+
+    checkLoginStatus();
+  },[])
+  const handleLogin = () => {
       const user = {
-          name:name,
-          email:email,
-          password:password,
-          profileImage:image
+          email: email,
+          password: password
       }
 
-      console.log("just before axios register")
-      // axios.post("http://localhost:8081/register",user).then((response) => {
-      axios.post("http://localhost:3000/register",user).then((response) => {
-          console.log(response);
-          Alert.alert("Registration successful","You have been registered successfully");
-          console.log("axios after")
-          setName("");
-          setEmail("");
-          setPassword("");
-          setImage("");
-      }).catch((error) => {
-          Alert.alert("Registration failed","An error occurred while registering");
-          console.log("registration failed",error)
-      });
+      // console.log(user)
+
+      axios.post("http://localhost:3000/login", user).then((response) => {
+       
+          const token = response.data.token;
+         const MF = AsyncStorage.setItem("authToken",token);
+          router.replace("/(tabs)/home")
+      })
   }
   return (
     <SafeAreaView
@@ -71,41 +72,11 @@ const register = () => {
               color: "#041E42",
             }}
           >
-            Register to your Account
+            Log in to your Account
           </Text>
         </View>
 
-        <View style={{ marginTop: 50 }}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
-              backgroundColor: "#E0E0E0",
-              paddingVertical: 5,
-              borderRadius: 5,
-              marginTop: 30,
-            }}
-          >
-            <Ionicons
-              name="person"
-              size={24}
-              color="gray"
-              style={{ marginLeft: 8 }}
-            />
-            <TextInput
-              value={name}
-              onChangeText={(text) => setName(text)}
-              style={{
-                color: "gray",
-                marginVertical: 10,
-                width: 300,
-                fontSize: name ? 18 : 18,
-              }}
-              placeholder="enter your name"
-            />
-          </View>
-
+        <View style={{ marginTop: 70 }}>
           <View
             style={{
               flexDirection: "row",
@@ -136,7 +107,7 @@ const register = () => {
             />
           </View>
 
-
+          <View style={{ marginTop: 10 }}>
             <View
               style={{
                 flexDirection: "row",
@@ -167,33 +138,7 @@ const register = () => {
                 placeholder="enter your Password"
               />
             </View>
-
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
-              backgroundColor: "#E0E0E0",
-              paddingVertical: 5,
-              borderRadius: 5,
-              marginTop: 30,
-            }}
-          >
-            <Entypo name="image" size={24} color="gray" style={{marginLeft:8}} />
-            <TextInput
-              value={image}
-              onChangeText={(text) => setImage(text)}
-              style={{
-                color: "gray",
-                marginVertical: 10,
-                width: 300,
-                fontSize: image ? 18 : 18,
-              }}
-              placeholder="enter your image url"
-            />
           </View>
-
-        
 
           <View
             style={{
@@ -213,7 +158,7 @@ const register = () => {
           <View style={{ marginTop: 80 }} />
 
           <Pressable
-         onPress={handleRegister}
+          onPress={handleLogin}
             style={{
               width: 200,
               backgroundColor: "#0072b1",
@@ -231,16 +176,16 @@ const register = () => {
                 fontWeight: "bold",
               }}
             >
-              Register
+              Login
             </Text>
           </Pressable>
 
           <Pressable
-            onPress={() => router.replace("/login")}
+            onPress={() => router.replace("/register")}
             style={{ marginTop: 15 }}
           >
             <Text style={{ textAlign: "center", color: "gray", fontSize: 16 }}>
-              Already have an account? Sign up
+              Don't have an account? Sign Up
             </Text>
           </Pressable>
         </View>
@@ -249,6 +194,6 @@ const register = () => {
   );
 };
 
-export default register;
+export default login;
 
 const styles = StyleSheet.create({});
