@@ -8,12 +8,12 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 import axios from "axios";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-  import UserProfile from "../../../components/UserProfile";
-//   import ConnectionRequest from "../../../components/ConnectionRequest";
+import UserProfile from "../../../components/UserProfile";
+import ConnectionRequest from "../../../components/ConnectionRequest";
 import { useRouter } from "expo-router";
 
 const index = () => {
@@ -29,41 +29,30 @@ const index = () => {
       const userId = decodedToken.userId;
       setUserId(userId);
     };
+
     fetchUser();
   }, []);
-
-
   useEffect(() => {
     if (userId) {
-      fetchUserProfile()
+      fetchUserProfile();
     }
   }, [userId]);
-
-  // fetchUserProfile
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
         `http://localhost:3000/profile/${userId}`
       );
       const userData = response.data.user;
-      setUser(userData)
+      setUser(userData);
     } catch (error) {
-      console.log("UPNI")
-
+      console.log("error fetching user profile", error);
     }
-  }
-
-
-  // fetchusers
-
+  };
   useEffect(() => {
     if (userId) {
-      fetchUsers()
+      fetchUsers();
     }
   }, [userId]);
-
-  // fetchusers
-
   const fetchUsers = async () => {
     axios
       .get(`http://localhost:3000/users/${userId}`)
@@ -74,12 +63,39 @@ const index = () => {
         console.log(error);
       });
   };
-console.log(users)
+  useEffect(() => {
+    if (userId) {
+      fetchFriendRequests();
+    }
+  }, [userId]);
 
+  
+  const fetchFriendRequests = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/connection-request/${userId}`
+      );
+      if (response.status === 200) {
+        const connectionRequestsData = response.data?.map((friendRequest) => ({
+          _id: friendRequest._id,
+          name: friendRequest.name,
+          email: friendRequest.email,
+          image: friendRequest.profileImage,
+        }));
+
+        setConnectionRequests(connectionRequestsData);
+        console.log(setConnectionRequests)
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+  console.log(connectionRequests);
+  
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
       <Pressable
-        onPress={() => router.push("/network/connections")}
+      onPress={() => router.push("/network/connections")}
         style={{
           marginTop: 10,
           marginHorizontal: 10,
