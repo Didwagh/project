@@ -84,7 +84,7 @@ const index = () => {
         }));
 
         setConnectionRequests(connectionRequestsData);
-        console.log(setConnectionRequests)
+    
       }
     } catch (error) {
       console.log("error", error);

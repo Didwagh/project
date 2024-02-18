@@ -11,14 +11,45 @@ import React, { useState, useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// import jwt_decode from "jwt-decode";
-// // import * as ImagePicker from "expo-image-picker";
-// import * as FileSystem from "expo-file-system";
-// import { firebase } from "../../../firebase";
-// import axios from "axios";
-// import { useRouter } from "expo-router";
+import { jwtDecode } from "jwt-decode";
+import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
+import { firebase } from "../../../firebase";
+import axios from "axios";
+import { useRouter } from "expo-router";
 
 const index = () => {
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState("");
+  const [userId, setUserId] = useState("");
+  const router = useRouter();
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = await AsyncStorage.getItem("authToken");
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.userId;
+      setUserId(userId);
+    };
+
+    fetchUser();
+  }, []);
+
+  // fetch image function is added
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+ 
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
       <View
@@ -72,7 +103,30 @@ const index = () => {
           </Pressable>
         </View>
       </View>
+      <Pressable
+        style={{
+          flexDirection: "coloumn",
+          marginRight: "auto",
+          marginLeft: "auto",
+        }}
+      >
+        <Pressable
+          onPress={pickImage}
+          style={{
+            widt: 40,
+            height: 40,
+            marginTop: 15,
+            backgroundColor: "#E0E0E0",
+            borderRadius: 20,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <MaterialIcons name="perm-media" size={24} color="black" />
+        </Pressable>
 
+        <Text>Media</Text>
+      </Pressable>
     </ScrollView>
   )
 }
