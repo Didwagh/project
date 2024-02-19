@@ -6,17 +6,19 @@ import {
   Image,
   Pressable,
   TextInput,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { firebase } from "../../../firebase";
 import axios from "axios";
 import { useRouter } from "expo-router";
+import "core-js/stable/atob";
 
 const index = () => {
   const [description, setDescription] = useState("");
@@ -33,8 +35,6 @@ const index = () => {
 
     fetchUser();
   }, []);
-
-  // fetch image function is added
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -48,8 +48,68 @@ const index = () => {
       setImage(result.assets[0].uri);
     }
   };
- 
+  const createPost = async () => {
+    try {
+      const uploadedUrl = await uploadFile();
 
+      const postData = {
+        description: description,
+        imageUrl: uploadedUrl,
+        userId: userId,
+      };
+
+      const response = await axios.post(
+        // "http://192.168.0.144:3000/create",
+        "http://localhost:3000/create",
+        postData
+      );
+
+      console.log("post created", response.data);
+      if (response.status === 201) {
+        router.replace("/(tabs)/home");
+      }
+    } catch (error) {
+      console.log("error creating post", error);
+    }
+  };
+  const uploadFile = async () => {
+    try {
+      // Ensure that 'image' contains a valid file URI
+      console.log("Image URI:", image);
+
+      const { uri } = await FileSystem.getInfoAsync(image);
+
+      if (!uri) {
+        throw new Error("Invalid file URI");
+      }
+
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+          resolve(xhr.response);
+        };
+        xhr.onerror = (e) => {
+          reject(new TypeError("Network request failed"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", uri, true);
+        xhr.send(null);
+      });
+
+      const filename = image.substring(image.lastIndexOf("/") + 1);
+
+      const ref = firebase.storage().ref().child(filename);
+      await ref.put(blob);
+
+      const downloadURL = await ref.getDownloadURL();
+      // setUrl(downloadURL);
+      return downloadURL;
+      // Alert.alert("Photo uploaded");
+    } catch (error) {
+      console.log("Error:", error);
+      // Handle the error or display a user-friendly message
+    }
+  };
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
       <View
@@ -83,7 +143,7 @@ const index = () => {
         >
           <Entypo name="back-in-time" size={24} color="black" />
           <Pressable
-            // onPress={createPost}
+            onPress={createPost}
             style={{
               padding: 10,
               backgroundColor: "#0072b1",
@@ -103,6 +163,32 @@ const index = () => {
           </Pressable>
         </View>
       </View>
+
+      <TextInput
+        value={description}
+        onChangeText={(text) => setDescription(text)}
+        placeholder="What do you want to talk about"
+        placeholderTextColor={"black"}
+        style={{
+          marginHorizontal: 10,
+          fontSize: 15,
+          fontWeight: "500",
+          marginTop: 10,
+        }}
+        multiline={true}
+        numberOfLines={10}
+        textAlignVertical={"top"}
+      />
+
+      <View>
+        {image && (
+          <Image
+            source={{ uri: image }}
+            style={{ width: "100%", height: 240, marginVertical: 20 }}
+          />
+        )}
+      </View>
+
       <Pressable
         style={{
           flexDirection: "coloumn",
@@ -128,9 +214,9 @@ const index = () => {
         <Text>Media</Text>
       </Pressable>
     </ScrollView>
-  )
-}
+  );
+};
 
-export default index
+export default index;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

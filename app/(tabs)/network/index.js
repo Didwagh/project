@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
@@ -69,7 +69,7 @@ const index = () => {
     }
   }, [userId]);
 
-  
+
   const fetchFriendRequests = async () => {
     try {
       const response = await axios.get(
@@ -84,18 +84,18 @@ const index = () => {
         }));
 
         setConnectionRequests(connectionRequestsData);
-    
+
       }
     } catch (error) {
       console.log("error", error);
     }
   };
   console.log(connectionRequests);
-  
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
       <Pressable
-      onPress={() => router.push("/network/connections")}
+        onPress={() => router.push("/network/connections")}
         style={{
           marginTop: 10,
           marginHorizontal: 10,
@@ -175,16 +175,22 @@ const index = () => {
           </Text>
         </View>
       </View>
-      <FlatList
-        data={users}
-        columnWrapperStyle={{ justifyContent: "space-between" }}
-        numColumns={2}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item, key }) => (
-          <UserProfile userId={userId} item={item} key={index} />
-        )}
-      />
+
+      <ScrollView horizontal={false} style={{ width: '100%', height: '100%' }}>
+        <ScrollView horizontal={false} style={{ width: '100%', height: '100%' }}>
+        <FlatList
+           scrollEnabled={false}
+          data={users}
+          columnWrapperStyle={{ justifyContent: "space-between" }}
+          numColumns={2}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item, key }) => (
+            <UserProfile userId={userId} item={item} key={index} />
+          )}
+        />
+      </ScrollView>
     </ScrollView>
+    </ScrollView >
   );
 };
 
