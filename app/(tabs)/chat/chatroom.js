@@ -44,7 +44,7 @@ const chatroom = () => {
     // call the fetchMessages() function to see the UI update
     setTimeout(() => {
       fetchMessages();
-    }, 20000)
+    }, 200)
   };
 
 
@@ -107,12 +107,13 @@ const chatroom = () => {
     const options = { hour: "numeric", minute: "numeric" };
     return new Date(time).toLocaleString("en-US", options);
   };
- 
+
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "white" }}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        {messages?.map((item,index) => (
+        {messages?.map((item, index) => (
           <Pressable
+            key={index} // Add a unique key here
             style={[
               item?.senderId === params?.senderId
                 ? {
@@ -136,7 +137,9 @@ const chatroom = () => {
             <Text style={{ fontSize: 13, textAlign: "left", color: "white", fontWeight: "500" }}>
               {item?.message}
             </Text>
-            <Text style={{ fontSize: 9, textAlign: "right", color: "#F0F0F0", marginTop: 5 }}>{formatTime(item?.timestamp)}</Text>
+            <Text style={{ fontSize: 9, textAlign: "right", color: "#F0F0F0", marginTop: 5 }}>
+              {formatTime(item?.timestamp)}
+            </Text>
           </Pressable>
         ))}
       </ScrollView>
