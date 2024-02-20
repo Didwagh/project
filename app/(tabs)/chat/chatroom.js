@@ -12,18 +12,41 @@ import React, { useLayoutEffect, useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-// import { useLocalSearchParams } from "expo-router";
 import { Entypo, Feather } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-// import { io } from "socket.io-client";
-// import axios from "axios";
+import { io } from "socket.io-client";
+import axios from "axios";
 
 const chatroom = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { params } = route;
-  // const { image, name, receiverId, senderId } = params;
   const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+
+  // connceting to socket we created
+  const socket = io("http://localhost:8000");
+  socket.on("connect", () => {
+    console.log("Connected to the Socket.IO server");
+  });
+  socket.on("receiveMessage", (newMessage) => {
+    // console.log("new Message", newMessage);
+
+    //update the state to include new message
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+  });
+
+  const sendMessage = async (senderId, receiverId) => {
+    socket.emit("sendMessage", { senderId, receiverId, message });
+
+    setMessage("");
+
+    // call the fetchMessages() function to see the UI update
+    setTimeout(() => {
+      fetchMessages();
+    }, 20000)
+  };
+
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -60,10 +83,35 @@ const chatroom = () => {
     });
   }, []);
 
+
+  // we are now using useEffect to get the messages and putting them in state
+  const fetchMessages = async () => {
+    try {
+      const senderId = params?.senderId;
+      const receiverId = params?.receiverId;
+
+      const response = await axios.get("http://localhost:3000/messages", {
+        params: { senderId, receiverId },
+      });
+
+      setMessages(response.data);
+    } catch (error) {
+      console.log("Error fetching the messages", error);
+    }
+  };
+  useEffect(() => {
+    fetchMessages();
+  }, []);
+
+  const formatTime = (time) => {
+    const options = { hour: "numeric", minute: "numeric" };
+    return new Date(time).toLocaleString("en-US", options);
+  };
+ 
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "white" }}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        {/* {messages?.map((item, index) => (
+        {messages?.map((item,index) => (
           <Pressable
             style={[
               item?.senderId === params?.senderId
@@ -90,7 +138,7 @@ const chatroom = () => {
             </Text>
             <Text style={{ fontSize: 9, textAlign: "right", color: "#F0F0F0", marginTop: 5 }}>{formatTime(item?.timestamp)}</Text>
           </Pressable>
-        ))} */}
+        ))}
       </ScrollView>
 
       <View

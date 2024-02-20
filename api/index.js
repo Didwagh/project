@@ -9,6 +9,20 @@ const app = express();
 const port = 3000;
 const cors = require("cors");
 app.use(cors());
+const http = require("http").createServer(app);
+// const io = require("socket.io")(http);
+
+
+// If you are using Socket.IO v3, you need to explicitly enable Cross-Origin Resource Sharing (CORS).
+const io = require("socket.io")(http
+  , {
+  cors: {
+    origin: "http://localhost:8081",
+    methods: ["GET", "POST"]
+  }
+}
+);
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -32,6 +46,7 @@ app.listen(port, () => {
 
 const User = require("./models/user");
 const Post = require("./models/post");
+const Chat = require("./models/message");
 
 //endpoint to register a user in the backend
 app.post("/register", async (req, res) => {
@@ -366,3 +381,74 @@ app.put("/profile/:userId", async (req, res) => {
     res.status(500).json({ message: "Error updating user profile" });
   }
 });
+
+// we are getting the creating messages 
+io.on("connection", (socket) => {
+  console.log("a user is connected");
+
+  socket.on("sendMessage", async (data) => {
+    try {
+      const { senderId, receiverId, message } = data;
+
+      console.log("data", data);
+
+      const newMessage = new Chat({ senderId, receiverId, message });
+      await newMessage.save();
+
+      //emit the message to the receiver
+      io.to(receiverId).emit("receiveMessage", newMessage);
+    } catch (error) {
+      console.log("Error handling the messages");
+    }
+    socket.on("disconnet", () => {
+      console.log("user disconnected");
+    });
+  });
+});
+
+http.listen(8000, () => {
+  console.log("Socket.IO server running on port 8000");
+});
+
+
+// we are getting the messages
+app.get("/messages", async (req, res) => {
+  try {
+    const { senderId, receiverId } = req.query;
+
+    console.log(senderId);
+    console.log(receiverId);
+
+    const messages = await Chat.find({
+      // we are checking if this messages belonged to user and receiver and nobody else
+      $or: [
+        { senderId: senderId, receiverId: receiverId },
+        { senderId: receiverId, receiverId: senderId },
+      ],
+    }).populate("senderId", "_id name");
+
+    res.status(200).json(messages);
+  } catch (error) {
+    res.status(500).json({ message: "Error in getting messages", error });
+  }
+});
+
+//endpoint to delete the messages;
+
+app.post("/delete",async(req,res) => {
+  try{
+      const {messages} = req.body;
+
+      if(!Array.isArray(messages) || messages.length == 0){
+          return res.status(400).json({message:"Invalid request body"})
+      };
+
+      for(const messageId of messages){
+          await Chat.findByIdAndDelete(messageId);
+      }
+
+      res.status(200).json({message:"Messages delted successfully!"})
+  } catch(error){
+      res.status(500).json({message:"Internal server error",error})
+  }
+})
