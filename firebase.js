@@ -4,6 +4,7 @@ import "firebase/compat/storage"
 
 const firebaseConfig = {
   apiKey: "AIzaSyBwUK7tMp-UuOMzyWxDF7AD-y1WlnQtOuw",
+  //  apiKey: "AIzaSyBwUK7tMp-UuOMzyWxDF7AD-y1WlnQtOuw",
   authDomain: "lnapp-b2bd0.firebaseapp.com",
   projectId: "lnapp-b2bd0",
   storageBucket: "lnapp-b2bd0.appspot.com",

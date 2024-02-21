@@ -2,11 +2,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const crypto = require("crypto");
+const dotenv = require("dotenv");
+dotenv.config();
 // const nodemailer = require("nodemailer");
 
 
 const app = express();
-const port = 3000;
+const port = process.env.NODE_PORT;
 const cors = require("cors");
 app.use(cors());
 const http = require("http").createServer(app);
@@ -17,7 +19,7 @@ const http = require("http").createServer(app);
 const io = require("socket.io")(http
   , {
   cors: {
-    origin: "http://localhost:8081",
+    origin:process.env.NODE_IO_HOST ,
     methods: ["GET", "POST"]
   }
 }
@@ -29,7 +31,7 @@ app.use(bodyParser.json());
 const jwt = require("jsonwebtoken");
 
 mongoose
-  .connect("mongodb+srv://sappy:sappy@cluster0.jpshjbn.mongodb.net/", {
+  .connect(process.env.NODE_MONGOOSE_CONNECT, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -41,7 +43,8 @@ mongoose
   });
 
 app.listen(port, () => {
-  console.log("Server is running on port 8000");
+  console.log("Server is running on port "+port);
+  
 });
 
 const User = require("./models/user");
@@ -406,8 +409,8 @@ io.on("connection", (socket) => {
   });
 });
 
-http.listen(8000, () => {
-  console.log("Socket.IO server running on port 8000");
+http.listen(process.env.NODE_IO_PORT, () => {
+  console.log("Socket.IO server running on port "+process.env.NODE_IO_PORT);
 });
 
 
