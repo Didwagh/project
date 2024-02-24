@@ -73,7 +73,8 @@ const ConnectionRequest = ({
               alignItems: "center",
             }}
           >
-            <Ionicons name="ios-checkmark-outline" size={22} color="#0072b1" />
+                   <Ionicons name="checkmark" size={24} color="Green" />
+
           </Pressable>
         </View>
       </View>

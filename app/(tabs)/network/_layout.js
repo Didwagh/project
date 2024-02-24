@@ -5,6 +5,7 @@ export default function Layout (){
         <Stack>
             <Stack.Screen name="index" options={{headerShown: false}} />
             <Stack.Screen name="connections" options={{headerShown: false}} />
+            <Stack.Screen name="toConnect" options={{headerShown: false}} />
         </Stack>
     )
    

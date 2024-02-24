@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
@@ -6,8 +6,11 @@ import { AntDesign, Entypo, Feather } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import axios from "axios";
 import moment from "moment";
+import { useRouter } from "expo-router";
+
 
 const connection = () => {
+  const router = useRouter();
 
   const [connections, setConnections] = useState([]);
   const [userId, setUserId] = useState("");
@@ -40,6 +43,19 @@ const connection = () => {
     }
   };
 
+  const handleNavigation = (item) => {
+    router.push({
+      pathname: "/chat/chatroom",
+
+      params: {
+        image: item?.profileImages,
+        name: item?.name,
+        receiverId: item?._id,
+        senderId: userId,
+      },
+    })
+
+  }
 
 
 
@@ -102,7 +118,11 @@ const connection = () => {
               style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
             >
               <Entypo name="dots-three-vertical" size={20} color="black" />
-              <Feather name="send" size={20} color="black" />
+              <Pressable onPress={() => { handleNavigation(item) }
+              }>
+
+                <Feather name="send" size={20} color="black" />
+              </Pressable>
             </View>
           </View>
         ))}

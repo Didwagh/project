@@ -12,6 +12,7 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons';
 import UserProfile from "../../../components/UserProfile";
 import ConnectionRequest from "../../../components/ConnectionRequest";
 import { useRouter } from "expo-router";
@@ -53,9 +54,10 @@ const index = () => {
       fetchUsers();
     }
   }, [userId]);
+
   const fetchUsers = async () => {
     axios
-      .get(`http://localhost:3000/users/${userId}`)
+      .get(`http://localhost:3000/regusers/${userId}`)
       .then((response) => {
         setUsers(response.data);
       })
@@ -68,6 +70,22 @@ const index = () => {
       fetchFriendRequests();
     }
   }, [userId]);
+
+  // const verifiedUsers = async () => {
+  //   axios
+  //     .get(`http://localhost:3000/regusers/${userId}`)
+  //     .then((response) => {
+  //       setUsers(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+  // useEffect(() => {
+  //   if (userId) {
+  //     fetchFriendRequests();
+  //   }
+  // }, [userId]);
 
 
   const fetchFriendRequests = async () => {
@@ -113,7 +131,7 @@ const index = () => {
       <View
         style={{ borderColor: "#E0E0E0", borderWidth: 2, marginVertical: 10 }}
       />
-
+    
       <View
         style={{
           marginTop: 10,
@@ -143,53 +161,40 @@ const index = () => {
         ))}
       </View>
 
-      <View style={{ marginHorizontal: 15 }}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Text>Grow your network faster</Text>
-          <Entypo name="cross" size={24} color="black" />
-        </View>
-
-        <Text>
-          Find and contact the right people. Plus see who's viewed your profile
+      <Pressable
+        onPress={() => router.push("/network/toConnect")}
+        style={{
+          marginTop: 10,
+          marginHorizontal: 10,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text style={{ fontSize: 16, fontWeight: "600" }}>
+          Not Yet Friends
         </Text>
-        <View
-          style={{
-            backgroundColor: "#FFC72C",
-            width: 140,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-            borderRadius: 25,
-            marginTop: 8,
-          }}
-        >
-          <Text
-            style={{ textAlign: "center", color: "white", fontWeight: "600" }}
-          >
-            Try Premium
-          </Text>
-        </View>
-      </View>
+        <AntDesign name="arrowright" size={22} color="black" />
+      </Pressable>
+
+      <View
+        style={{ borderColor: "#E0E0E0", borderWidth: 2, marginVertical: 10 }}
+      />
 
       <ScrollView horizontal={false} style={{ width: '100%', height: '100%' }}>
         <ScrollView horizontal={false} style={{ width: '100%', height: '100%' }}>
-        <FlatList
-           scrollEnabled={false}
-          data={users}
-          columnWrapperStyle={{ justifyContent: "space-between" }}
-          numColumns={2}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item, key }) => (
-            <UserProfile userId={userId} item={item} key={index} />
-          )}
-        />
+          <FlatList
+            scrollEnabled={false}
+            data={users}
+            columnWrapperStyle={{ justifyContent: "space-between" }}
+            numColumns={2}
+            keyExtractor={(item) => item._id}
+            renderItem={({ item, key }) => (
+              <UserProfile userId={userId} item={item} key={index} />
+            )}
+          />
+        </ScrollView>
       </ScrollView>
-    </ScrollView>
     </ScrollView >
   );
 };

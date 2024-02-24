@@ -185,6 +185,8 @@ app.get("/profile/:userId", async (req, res) => {
   }
 });
 
+
+// to get all user
 app.get("/users/:userId", async (req, res) => {
   try {
     const loggedInUserId = req.params.userId;
@@ -206,8 +208,39 @@ app.get("/users/:userId", async (req, res) => {
     //find the users who are not connected to the logged-in user Id
     const users = await User.find({
       _id: { $ne: loggedInUserId, $nin: connectedUserIds },
-    });
+      // verified: { $eq: true },
+    })
+    res.status(200).json(users);
+  } catch (error) {
+    console.log("Error retrieving users", error);
+    res.status(500).json({ message: "Error retrieving users" });
+  }
+});
 
+// to get all users not only verified but all
+app.get("/regusers/:userId", async (req, res) => {
+  try {
+    const loggedInUserId = req.params.userId;
+
+    //fetch the logged-in user's connections
+    const loggedInuser = await User.findById(loggedInUserId).populate(
+      "connections",
+      "_id"
+    );
+    if (!loggedInuser) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    //get the ID's of the connected users
+    const connectedUserIds = loggedInuser.connections.map(
+      (connection) => connection._id
+    );
+
+    //find the users who are not connected to the logged-in user Id
+    const users = await User.find({
+      _id: { $ne: loggedInUserId, $nin: connectedUserIds },
+      verified: { $eq: true },
+    })
     res.status(200).json(users);
   } catch (error) {
     console.log("Error retrieving users", error);
@@ -291,8 +324,9 @@ app.get("/connections/:userId", async (req, res) => {
     const userId = req.params.userId;
 
     const user = await User.findById(userId)
-      .populate("connections", "name profileImage createdAt")
-      .exec();
+    .populate("connections", "name profileImage createdAt")
+    .exec();
+     
 
     if (!user) {
       return res.status(404).json({ message: "User is not found" });
