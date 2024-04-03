@@ -41,7 +41,7 @@ const index = () => {
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/profile/${userId}`
+        `https://server-51or.onrender.com/profile/${userId}`
       );
       const userData = response.data.user;
       setUser(userData);
@@ -57,7 +57,7 @@ const index = () => {
 
   const fetchUsers = async () => {
     axios
-      .get(`http://localhost:3000/regusers/${userId}`)
+      .get(`https://server-51or.onrender.com/regusers/${userId}`)
       .then((response) => {
         setUsers(response.data);
       })
@@ -73,7 +73,7 @@ const index = () => {
 
   // const verifiedUsers = async () => {
   //   axios
-  //     .get(`http://localhost:3000/regusers/${userId}`)
+  //     .get(`https://server-51or.onrender.com/regusers/${userId}`)
   //     .then((response) => {
   //       setUsers(response.data);
   //     })
@@ -91,7 +91,7 @@ const index = () => {
   const fetchFriendRequests = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/connection-request/${userId}`
+        `https://server-51or.onrender.com/connection-request/${userId}`
       );
       if (response.status === 200) {
         const connectionRequestsData = response.data?.map((friendRequest) => ({

@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
    profileImage:String,
    userDescription:{
        type:String,
-       default:null
+       default:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/510px-Default_pfp.svg.png"
    },
    connections:[
        {

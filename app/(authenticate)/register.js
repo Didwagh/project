@@ -32,7 +32,7 @@ const register = () => {
           profileImage:image
       }
 
-      axios.post("http://localhost:3000/register",user).then((response) => {
+      axios.post("https://server-51or.onrender.com/register",user).then((response) => {
           console.log(response);
           Alert.alert("Registration successful","You have been registered successfully");
           setName("");

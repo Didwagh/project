@@ -37,7 +37,7 @@ const index = () => {
     const fetchConnections = async () => {
         try {
             const response = await axios.get(
-                `http://localhost:3000/connections/${userId}`
+                `https://server-51or.onrender.com/connections/${userId}`
             );
             setConnections(response.data.connections);
         } catch (error) {

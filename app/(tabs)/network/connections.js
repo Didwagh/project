@@ -35,7 +35,7 @@ const connection = () => {
   const fetchConnections = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/connections/${userId}`
+        `https://server-51or.onrender.com/connections/${userId}`
       );
       setConnections(response.data.connections);
     } catch (error) {
@@ -109,7 +109,7 @@ const connection = () => {
                 B.Tech | Computer Science Technology
               </Text>
 
-              <Text style={{ color: "gray" }}>
+              <Text style={{ color: gray }}>
                 connected on {moment(item?.createdAt).format("MMMM Do YYYY")}
               </Text>
             </View>

@@ -43,7 +43,7 @@ const profile = () => {
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/profile/${userId}`
+        `https://server-51or.onrender.com/profile/${userId}`
       );
       const userData = response.data.user;
       setUser(userData);
@@ -55,7 +55,7 @@ const profile = () => {
   const handleSaveDescription = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/profile/${userId}`,
+        `https://server-51or.onrender.com/profile/${userId}`,
         {
           userDescription,
         }

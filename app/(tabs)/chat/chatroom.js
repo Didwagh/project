@@ -90,7 +90,7 @@ const chatroom = () => {
       const senderId = params?.senderId;
       const receiverId = params?.receiverId;
 
-      const response = await axios.get("http://localhost:3000/messages", {
+      const response = await axios.get("https://server-51or.onrender.com/messages", {
         params: { senderId, receiverId },
       });
 

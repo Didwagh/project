@@ -12,7 +12,7 @@ const ConnectionRequest = ({
   const acceptConnection = async (requestId) => {
     try {
       const response = await fetch(
-        "http://localhost:3000/connection-request/accept",
+        "https://server-51or.onrender.com/connection-request/accept",
         {
           method: "POST",
           headers: {

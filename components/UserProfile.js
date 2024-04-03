@@ -12,7 +12,7 @@ import {
     const [connectionSent, setConnectionSent] = useState(false);
     const sendConnectionRequest = async (currentUserId, selectedUserId) => {
       try {
-        const response = await fetch("http://localhost:3000/connection-request", {
+        const response = await fetch("https://server-51or.onrender.com/connection-request", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

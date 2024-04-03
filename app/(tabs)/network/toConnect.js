@@ -28,7 +28,7 @@ const connection = () => {
 
     const fetchUsers = async () => {
         axios
-            .get(`http://localhost:3000/users/${userId}`)
+            .get(`https://server-51or.onrender.com/users/${userId}`)
             .then((response) => {
                 setUsers(response.data);
             })

@@ -20,20 +20,20 @@ const login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  // useEffect(() => {
-  //   const checkLoginStatus = async () => {
-  //       try{
-  //           const token = await AsyncStorage.getItem("authToken");
-  //           if(token){
-  //               router.replace("/(tabs)/home")
-  //           }
-  //       } catch(error){
-  //           console.log(error);
-  //       }
-  //   }
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+        try{
+            const token = await AsyncStorage.getItem("authToken");
+            if(token){
+                router.replace("/(tabs)/home")
+            }
+        } catch(error){
+            console.log(error);
+        }
+    }
 
-  //   checkLoginStatus();
-  // },[])
+    checkLoginStatus();
+  },[])
   const handleLogin = () => {
       const user = {
           email: email,
@@ -42,7 +42,7 @@ const login = () => {
 
       // console.log(user)
 
-      axios.post("http://localhost:3000/login", user).then((response) => {
+      axios.post("https://server-51or.onrender.com/login", user).then((response) => {
        
           const token = response.data.token;
          const MF = AsyncStorage.setItem("authToken",token);
