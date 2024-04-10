@@ -109,7 +109,7 @@ const connection = () => {
                 B.Tech | Computer Science Technology
               </Text>
 
-              <Text style={{ color: gray }}>
+              <Text style={{ color: "gray" }}>
                 connected on {moment(item?.createdAt).format("MMMM Do YYYY")}
               </Text>
             </View>

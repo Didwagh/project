@@ -489,3 +489,29 @@ app.post("/delete",async(req,res) => {
       res.status(500).json({message:"Internal server error",error})
   }
 })
+
+
+
+
+app.get("/search", async (req, res) => {
+  try {
+    const { name } = req.query;
+    console.log(name)
+
+    const user = await User.find({ name: name });
+    
+
+      if (user) {
+        res.json(user);
+        console.log(user)
+      } else {
+        res.status(404).json({ error: 'User not found' });
+      }
+   
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+

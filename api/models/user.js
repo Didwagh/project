@@ -18,6 +18,18 @@ const userSchema = new mongoose.Schema({
        type:Boolean,
        default:false
    },
+
+   status:{
+    type:String,
+    required:true,
+},
+privacy:{
+    type:String,
+    required:true,
+},
+
+
+
    verificationToken:String,
    profileImage:String,
    userDescription:{

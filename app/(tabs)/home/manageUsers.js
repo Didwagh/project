@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, TextInput, Button, Text } from 'react-native';
 import axios from 'axios';
 
@@ -7,7 +7,6 @@ const SearchUser = () => {
   const [searchResult, setSearchResult] = useState(null);
   const [error, setError] = useState('');
 
-useEffect(() => {
   const handleSearch = async () => {
     try {
       const response = await axios.get(`http://localhost:3000/search?name=${searchName}`);
@@ -19,10 +18,6 @@ useEffect(() => {
       setError('User not found');
     }
   };
-
-  handleSearch()
-}, [searchName])
-
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
