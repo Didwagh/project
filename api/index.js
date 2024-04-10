@@ -496,22 +496,11 @@ app.post("/delete",async(req,res) => {
 app.get("/search", async (req, res) => {
   try {
     const { name } = req.query;
-    console.log(name)
-
-    const user = await User.find({ name: name });
-    
-
-      if (user) {
-        res.json(user);
-        console.log(user)
-      } else {
-        res.status(404).json({ error: 'User not found' });
-      }
-   
-
+    const regex = new RegExp(name, 'i'); // 'i' flag for case-insensitive matching
+    const users = await User.find({ name: regex });
+    res.json(users);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
-

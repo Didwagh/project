@@ -20,20 +20,20 @@ const login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-        try{
-            const token = await AsyncStorage.getItem("authToken");
-            if(token){
-                router.replace("/(tabs)/home")
-            }
-        } catch(error){
-            console.log(error);
-        }
-    }
+  // useEffect(() => {
+  //   const checkLoginStatus = async () => {
+  //       try{
+  //           const token = await AsyncStorage.getItem("authToken");
+  //           if(token){
+  //               router.replace("/(tabs)/home")
+  //           }
+  //       } catch(error){
+  //           console.log(error);
+  //       }
+  //   }
 
-    checkLoginStatus();
-  },[])
+  //   checkLoginStatus();
+  // },[])
   const handleLogin = () => {
       const user = {
           email: email,

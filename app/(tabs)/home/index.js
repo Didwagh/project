@@ -102,6 +102,7 @@ const index = () => {
         </Pressable>
 
         <Pressable
+
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -112,6 +113,8 @@ const index = () => {
             height: 30,
             flex: 1,
           }}
+          onPress={() => router.push("/home/Search")}
+          
         >
           <AntDesign
             style={{ marginLeft: 10 }}
