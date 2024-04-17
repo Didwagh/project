@@ -12,11 +12,16 @@ import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { useRouter } from "expo-router";
+
+
 
 const ProfileCard = () => {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState();
   const [posts, setPosts] = useState([]);
+  const router = useRouter();
+
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -49,6 +54,7 @@ const ProfileCard = () => {
 
   return (
     <View style={styles.wrapper}>
+      <Pressable  onPress={() => router.push("/home/editProfile")} > <Text>hmm</Text> </Pressable>
       
       <View style={styles.profile}>
         <Image
@@ -93,7 +99,9 @@ const ProfileCard = () => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-   margin:25
+    alignItems:'flex-end',
+    marginTop:10,
+    marginRight:25,
   },
   topIcons: {
     flexDirection: "row",
