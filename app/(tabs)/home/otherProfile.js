@@ -57,6 +57,7 @@ const ProfileCard = () => {
   const route = useRoute();
   const { params } = route;
   const userId = params.userId;
+  console.log(userId)
 
 
   useEffect(() => {
@@ -76,6 +77,41 @@ const ProfileCard = () => {
       console.log("error fetching user profile", error);
     }
   };
+
+
+
+
+
+
+  const handleBlock = async () => {
+    const confirmBlock = window.confirm("Are you sure you want to change the user's status?");
+    if (!confirmBlock) return;
+  
+    try {
+      let newStatus;
+      if (!user.status || user.status === 'unblocked') {
+        newStatus = 'blocked';
+      } else if (user.status === 'blocked') {
+        newStatus = 'unblocked';
+      }
+  
+      const response = await axios.put(`http://localhost:3000/users/${userId}`, {
+        status: newStatus,
+      });
+  
+      if (response.status === 200) {
+        setUser((prevUser) => ({
+          ...prevUser,
+          status: newStatus,
+        }));
+      }
+  
+      console.log(user);
+    } catch (error) {
+      console.error('Error changing user status:', error);
+    }
+  };
+  
 
   return (
     <View style={styles.wrapper}>
@@ -99,8 +135,8 @@ const ProfileCard = () => {
 
 
           {admin?.name === "admin" && (
-            <TouchableOpacity style={styles.btn}>
-              <Text style={{ color: "#fff" }}>Block</Text>
+            <TouchableOpacity style={styles.btn} onPress={handleBlock} >
+              <Text style={{ color: "#fff" }}>{user?.status === 'blocked' ? 'Block' : 'Unblock'}</Text>
             </TouchableOpacity>
           )}
         </View>
