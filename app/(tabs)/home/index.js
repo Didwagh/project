@@ -145,10 +145,21 @@ const index = () => {
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 10, }}
               >
+                  <Pressable onPress={() => {
+                  router.push({
+                    pathname: "/home/otherProfile",
+
+                    params: {
+                      userId: item?.user?._id,
+                    },
+                  })
+                }}> 
                 <Image
                   style={{ width: 60, height: 60, borderRadius: 30 }}
                   source={{ uri: item?.user?.profileImage }}
                 />
+                </Pressable>
+                
 
                 <View style={{ flexDirection: "column", gap: 2 }}>
                   <Text style={{ fontSize: 15, fontWeight: "600" }}>

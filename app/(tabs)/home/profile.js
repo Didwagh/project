@@ -1,187 +1,155 @@
-import React, { useState } from 'react';
-import { View, Text, Image, FlatList, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Pressable,
+  Image,
+  TextInput,
+  TouchableOpacity
+} from "react-native";
+import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
-const ProfilePage = () => {
-  // Dummy data for the grid of images
-  const images = [
-    { id: '1', uri: 'https://via.placeholder.com/150' },
-    { id: '2', uri: 'https://via.placeholder.com/150' },
-    { id: '3', uri: 'https://via.placeholder.com/150' },
-    { id: '4', uri: 'https://via.placeholder.com/150' },
-    { id: '5', uri: 'https://via.placeholder.com/150' },
-    { id: '6', uri: 'https://via.placeholder.com/150' },
-    { id: '7', uri: 'https://via.placeholder.com/150' },
-    { id: '8', uri: 'https://via.placeholder.com/150' },
-    { id: '9', uri: 'https://via.placeholder.com/150' },
-  ];
+const ProfileCard = () => {
+  const [userId, setUserId] = useState("");
+  const [user, setUser] = useState();
+  const [posts, setPosts] = useState([]);
 
-  const [editMode, setEditMode] = useState(false);
-  const [profileInfo, setProfileInfo] = useState({
-    name: 'John Doe',
-    headline: 'Software Engineer',
-    country: 'USA',
-    city: 'New York',
-    company: 'ABC Inc.',
-    industry: 'Technology',
-    college: 'XYZ University',
-    website: 'https://example.com',
-    aboutMe: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    skills: 'React Native, JavaScript, HTML, CSS',
-  });
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = await AsyncStorage.getItem("authToken");
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.userId;
+      setUserId(userId);
+    };
 
-  const toggleEditMode = () => {
-    setEditMode(!editMode);
-  };
+    fetchUser();
+  }, []);
 
-  const handleInputChange = (key, value) => {
-    setProfileInfo({ ...profileInfo, [key]: value });
-  };
+  useEffect(() => {
+    if (userId) {
+      fetchUserProfile();
+    }
+  }, [userId]);
 
-  const saveProfile = () => {
-    // Handle saving profile data here
-    console.log('Profile data saved:', profileInfo);
-    toggleEditMode(); // Switch back to view mode after saving
+  const fetchUserProfile = async () => {
+    try {
+      const response = await axios.get(
+        `https://server-51or.onrender.com/profile/${userId}`
+      );
+      const userData = response.data.user;
+      setUser(userData);
+    } catch (error) {
+      console.log("error fetching user profile", error);
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={styles.wrapper}>
+      
+      <View style={styles.profile}>
         <Image
-          source={{ uri: 'https://via.placeholder.com/150' }}
-          style={styles.profileImage}
+          style={styles.thumbnail}
+          source={{ uri: user?.profileImage }}
         />
-        <View style={styles.userInfo}>
-          <Text style={styles.username}>{profileInfo.name}</Text>
-          <Text style={styles.bio}>{profileInfo.headline}</Text>
+        <Text style={styles.name}>{user?.name}</Text>
+        <Text style={styles.title}>Front-End Developer</Text>
+        <Text style={styles.description}>
+          A front-end web developer is responsible for implementing visual
+          elements that users.
+        </Text>
+        
+      </View>
+      <View style={styles.socialIcons}>
+        <View style={styles.icon}>
+          <TouchableOpacity>
+            <Text>Instagram Icon</Text>
+          </TouchableOpacity>
+          <Text style={styles.followers}>98.5k</Text>
+          <Text>Followers</Text>
+        </View>
+        <View style={styles.icon}>
+          <TouchableOpacity>
+            <Text>Facebook Icon</Text>
+          </TouchableOpacity>
+          <Text style={styles.followers}>44.5k</Text>
+          <Text>Followers</Text>
+        </View>
+        <View style={styles.icon}>
+          <TouchableOpacity>
+            <Text>YouTube Icon</Text>
+          </TouchableOpacity>
+          <Text style={styles.followers}>100k</Text>
+          <Text>Followers</Text>
         </View>
       </View>
-
-      {editMode ? (
-        <View style={styles.profileEditInputs}>
-          <InputLabel label="Name">
-            <TextInput
-              style={styles.input}
-              placeholder="Name"
-              value={profileInfo.name}
-              onChangeText={(text) => handleInputChange('name', text)}
-            />
-          </InputLabel>
-          <InputLabel label="Headline">
-            <TextInput
-              style={styles.input}
-              placeholder="Headline"
-              value={profileInfo.headline}
-              onChangeText={(text) => handleInputChange('headline', text)}
-            />
-          </InputLabel>
-          {/* Add other input fields similarly */}
-        </View>
-      ) : null}
-
-      <View style={styles.actionContainer}>
-        {editMode ? (
-          <TouchableOpacity style={styles.saveBtn} onPress={saveProfile}>
-            <Text style={styles.buttonText}>Save</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={styles.editBtn} onPress={toggleEditMode}>
-            <Text style={styles.buttonText}>Edit Profile</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-
-      <FlatList
-        data={images}
-        numColumns={3}
-        renderItem={({ item }) => (
-          <Image source={{ uri: item.uri }} style={styles.image} />
-        )}
-        keyExtractor={(item) => item.id}
-      />
     </View>
   );
 };
 
-const InputLabel = ({ label, children }) => (
-  <View>
-    <Text style={styles.label}>{label}</Text>
-    {children}
-  </View>
-);
-
 const styles = StyleSheet.create({
-  container: {
+  wrapper: {
     flex: 1,
-    backgroundColor: '#fff',
+   margin:25
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  profileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    marginRight: 20,
-  },
-  userInfo: {
-    flex: 1,
-  },
-  username: {
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  bio: {
-    color: '#666',
-  },
-  profileEditInputs: {
-    marginTop: 20,
-    paddingHorizontal: 20,
-  },
-  label: {
-    marginBottom: 5,
-    fontWeight: 'bold',
-  },
-  input: {
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    paddingHorizontal: 10,
+  topIcons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    paddingHorizontal: 15,
     marginBottom: 20,
   },
-  actionContainer: {
-    alignItems: 'center',
-    marginTop: 20,
+  profile: {
+    alignItems: "center",
+    marginBottom: 20,
   },
-  editBtn: {
-    width: 300,
-    height: 50,
-    backgroundColor: '#0073b1',
-    borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
+  thumbnail: {
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+    marginBottom: 15,
   },
-  saveBtn: {
-    width: 300,
-    height: 50,
-    backgroundColor: '#0073b1',
-    borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
+  name: {
+    fontSize: 24,
+    fontWeight: "600",
+    marginBottom: 5,
   },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 18,
+  title: {
+    fontSize: 12,
+    color: "#7C8097",
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
+    marginBottom: 10,
   },
-  image: {
-    width: '33.333%',
-    aspectRatio: 1, // Maintain aspect ratio for images
+  description: {
+    fontSize: 14,
+    marginBottom: 15,
+    textAlign: "center",
+    paddingHorizontal: 20,
+  },
+  btn: {
+    backgroundColor: "#6452E9",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 70,
+    elevation: 3,
+  },
+  socialIcons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+  },
+  icon: {
+    alignItems: "center",
+  },
+  followers: {
+    marginTop: 10,
+    marginBottom: 5,
+    fontWeight: "bold",
   },
 });
 
-export default ProfilePage;
+export default ProfileCard;
