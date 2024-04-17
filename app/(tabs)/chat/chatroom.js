@@ -101,7 +101,7 @@ const chatroom = () => {
   };
   useEffect(() => {
     fetchMessages();
-  }, []);
+  }, [messages]);
 
   const formatTime = (time) => {
     const options = { hour: "numeric", minute: "numeric" };
