@@ -504,3 +504,27 @@ app.get("/search", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+
+
+
+
+
+
+
+
+
+app.delete('/posts/:id', async (req, res) => {
+  try {
+      const postId = req.params.id;
+      // Find the post by ID and delete it
+      const deletedPost = await Post.findByIdAndDelete(postId);
+      if (!deletedPost) {
+          return res.status(404).json({ message: 'Post not found' });
+      }
+      res.json({ message: 'Post deleted successfully', deletedPost });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+});
