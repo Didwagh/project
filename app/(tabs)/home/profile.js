@@ -14,14 +14,11 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { useRouter } from "expo-router";
 
-
-
 const ProfileCard = () => {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState();
   const [posts, setPosts] = useState([]);
   const router = useRouter();
-
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,19 +26,16 @@ const ProfileCard = () => {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.userId;
       setUserId(userId);
-      console.log(userId)
-      
+      console.log(userId);
     };
 
     fetchUser();
   }, []);
 
-
-
-
   useEffect(() => {
     if (userId) {
       fetchUserProfile();
+      fetchUserPosts();
     }
   }, [userId]);
 
@@ -57,42 +51,29 @@ const ProfileCard = () => {
     }
   };
 
-
-
-
-
-
-  useEffect(() => {
-    const fetchUserPosts = async () => {
-    
-      axios.get(`http://localhost:3000/post/${userId}`)
-        .then(response => {
-          console.log('Posts:', response.data);
-        })
-        .catch(error => {
-          console.error('Error fetching posts:', error);
-        });
-    };
-
-    fetchUserPosts();
-  }, [userId]);
+  const fetchUserPosts = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/post/${userId}`);
+      setPosts(response.data);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+  };
 
   return (
     <View style={styles.wrapper}>
-      <Pressable  onPress={() => router.push("/home/editProfile")} > <Text>hmm</Text> </Pressable> 
-      
+      <Pressable onPress={() => router.push("/home/editProfile")}>
+        <Text>hmm</Text>
+      </Pressable>
+
       <View style={styles.profile}>
-        <Image
-          style={styles.thumbnail}
-          source={{ uri: user?.profileImage }}
-        />
+        <Image style={styles.thumbnail} source={{ uri: user?.profileImage }} />
         <Text style={styles.name}>{user?.name}</Text>
         <Text style={styles.title}>Front-End Developer</Text>
         <Text style={styles.description}>
           A front-end web developer is responsible for implementing visual
           elements that users.
         </Text>
-        
       </View>
       <View style={styles.socialIcons}>
         <View style={styles.icon}>
@@ -117,16 +98,50 @@ const ProfileCard = () => {
           <Text>Followers</Text>
         </View>
       </View>
+
+      {/* Render posts */}
+      <ScrollView contentContainerStyle={styles.postsContainer}>
+
+        {posts.map((post, index) => (
+          <View key={index} style={styles.postContainer}>
+            {post.image ? (
+              <Image source={{ uri: post.image }} style={styles.postImage} />
+            ) : (
+              <Text>No Image</Text>
+            )}
+            {/* Add additional elements as needed */}
+          </View>
+        ))}
+
+        
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  postsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+  },
+  postsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+  },
+  postImage: {
+    width: "100%",
+    aspectRatio: 1, // Maintain aspect ratio
+    borderRadius: 10,
+  },
   wrapper: {
     flex: 1,
-    alignItems:'flex-end',
-    marginTop:10,
-    marginRight:25,
+    alignItems: "flex-end",
+    marginTop: 10,
+    marginRight: 25,
   },
   topIcons: {
     flexDirection: "row",
@@ -134,6 +149,10 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 15,
     marginBottom: 20,
+  },
+  postContainer: {
+    width: "30%", // Adjust the width based on the requirement to have 3 posts per row
+    marginBottom: 10,
   },
   profile: {
     alignItems: "center",

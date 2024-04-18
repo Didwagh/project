@@ -39,7 +39,6 @@ const Index = () => {
       const userData = response.data.user;
       setUser(userData);
 
-      router.replace("/(tabs)/home")
       // if(userData.status != "blocked" ) {
       // }else{
       //   router.replace("/blocked")
