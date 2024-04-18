@@ -29,10 +29,15 @@ const ProfileCard = () => {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.userId;
       setUserId(userId);
+      console.log(userId)
+      
     };
 
     fetchUser();
   }, []);
+
+
+
 
   useEffect(() => {
     if (userId) {
@@ -52,9 +57,29 @@ const ProfileCard = () => {
     }
   };
 
+
+
+
+
+
+  useEffect(() => {
+    const fetchUserPosts = async () => {
+    
+      axios.get(`http://localhost:3000/post/${userId}`)
+        .then(response => {
+          console.log('Posts:', response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching posts:', error);
+        });
+    };
+
+    fetchUserPosts();
+  }, [userId]);
+
   return (
     <View style={styles.wrapper}>
-      <Pressable  onPress={() => router.push("/home/editProfile")} > <Text>hmm</Text> </Pressable>
+      <Pressable  onPress={() => router.push("/home/editProfile")} > <Text>hmm</Text> </Pressable> 
       
       <View style={styles.profile}>
         <Image

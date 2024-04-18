@@ -8,46 +8,116 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import axios from "axios";
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 
 const login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const [userId, setUserId] = useState("");
+  const [user, setUser] = useState();
+
   useEffect(() => {
     const checkLoginStatus = async () => {
-        try{
-            const token = await AsyncStorage.getItem("authToken");
-            if(token){
-                router.replace("/(tabs)/home")
-            }
-        } catch(error){
-            console.log(error);
+      try {
+        const token = await AsyncStorage.getItem("authToken");
+        if (token) {
+          console.log(token)
+          fetchUser()
+          
         }
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     checkLoginStatus();
-  },[])
-  const handleLogin = () => {
-      const user = {
-          email: email,
-          password: password
+  }, [])
+
+
+
+
+
+
+
+ 
+    const fetchUser = async () => {
+      console.log("fetchinguser")
+      const token = await AsyncStorage.getItem("authToken");
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.userId;
+      setUserId(userId);
+      console.log(userId)
+    };
+
+  
+
+  useEffect(() => {
+    if (userId) {
+      console.log("fetchinguserprofile")
+      fetchUserProfile();
+    }
+  }, [userId]);
+
+  const fetchUserProfile = async () => {
+    try {
+      console.log(userId+"user Id from fetchuserProfile")
+      const response = await axios.get(
+        `https://server-51or.onrender.com/profile/${userId}`
+      );
+      const userData = response.data.user;
+      setUser(userData);
+      console.log(userData)
+  
+      
+      if(userData.status != "blocked" ) {
+        console.log("blocked")
+        router.replace("/(tabs)/home")
+      }else{
+        console.log("unblocked")
+        router.replace("/(tabs)/home/blocked")
+
+        
+
       }
+    
+    } catch (error) {
+      console.log("error fetching user profile", error);
+    }
+  };
 
-      // console.log(user)
 
-      axios.post("https://server-51or.onrender.com/login", user).then((response) => {
-       
-          const token = response.data.token;
-         const MF = AsyncStorage.setItem("authToken",token);
-          router.replace("/(tabs)/home")
-      })
+
+
+
+
+
+
+
+
+
+  const handleLogin = () => {
+    const user = {
+      email: email,
+      password: password
+    }
+
+    // console.log(user)
+
+    axios.post("https://server-51or.onrender.com/login", user).then((response) => {
+
+      const token = response.data.token;
+      const MF = AsyncStorage.setItem("authToken", token);
+      // router.replace("/(tabs)/home")
+    })
   }
   return (
     <SafeAreaView
@@ -158,7 +228,7 @@ const login = () => {
           <View style={{ marginTop: 80 }} />
 
           <Pressable
-          onPress={handleLogin}
+            onPress={handleLogin}
             style={{
               width: 200,
               backgroundColor: "#0072b1",

@@ -555,3 +555,32 @@ app.put('/users/:userId', async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+
+
+
+
+
+
+
+app.get('/post/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const posts = await Post.find({ user: userId });
+    res.json(posts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// app.get('/user/:userId', async (req, res) => {
+//   const userId = req.params.userId;
+//   try {
+//     const posts = await Post.find({ user: userId }).populate('user', 'name'); // Populate the 'user' field with 'name' only
+//     res.json(posts);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });

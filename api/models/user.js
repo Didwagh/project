@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema({
    status:{
     type:String,
     required:true,
+    default:""
 },
 private:{
     type:String,
