@@ -20,8 +20,9 @@ const ProfileCard = () => {
   const [user, setUser] = useState();
   const [admin, setAdmin] = useState();
   const [adminId, setAdminId] = useState("");
+  const [posts, setPosts] = useState([]);
 
-  
+
 
 
 
@@ -48,7 +49,7 @@ const ProfileCard = () => {
       );
       const userData = response.data.user;
       setAdmin(userData)
-     console.log(userData)
+      console.log(userData)
     } catch (error) {
       console.log("error fetching user profile", error);
     }
@@ -63,6 +64,7 @@ const ProfileCard = () => {
   useEffect(() => {
     if (userId) {
       fetchUserProfile();
+      fetchUserPosts();
     }
   }, [userId]);
 
@@ -86,7 +88,7 @@ const ProfileCard = () => {
   const handleBlock = async () => {
     const confirmBlock = window.confirm("Are you sure you want to change the user's status?");
     if (!confirmBlock) return;
-  
+
     try {
       let newStatus;
       if (!user.status || user.status === 'unblocked') {
@@ -94,24 +96,33 @@ const ProfileCard = () => {
       } else if (user.status === 'blocked') {
         newStatus = 'unblocked';
       }
-  
+
       const response = await axios.put(`http://localhost:3000/users/${userId}`, {
         status: newStatus,
       });
-  
+
       if (response.status === 200) {
         setUser((prevUser) => ({
           ...prevUser,
           status: newStatus,
         }));
       }
-  
+
       console.log(user);
     } catch (error) {
       console.error('Error changing user status:', error);
     }
   };
-  
+
+  const fetchUserPosts = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/post/${userId}`);
+      setPosts(response.data);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+  };
+
 
   return (
     <View style={styles.wrapper}>
@@ -165,11 +176,45 @@ const ProfileCard = () => {
           <Text>Followers</Text>
         </View>
       </View>
+
+
+      <ScrollView contentContainerStyle={styles.postsContainer}>
+
+        {posts.map((post, index) => (
+          <View key={index} style={styles.postContainer}>
+            {post.image ? (
+              <Image source={{ uri: post.image }} style={styles.postImage} />
+            ) : (
+              <Text>No Image</Text>
+            )}
+            {/* Add additional elements as needed */}
+          </View>
+        ))}
+
+
+      </ScrollView>
+
+
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  postsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+  },
+  postImage: {
+    width: "100%",
+    aspectRatio: 1, // Maintain aspect ratio
+    borderRadius: 10,
+  },
+  postContainer: {
+    width: "30%", // Adjust the width based on the requirement to have 3 posts per row
+    marginBottom: 10,
+  },
   wrapper: {
     flex: 1,
     margin: 25
