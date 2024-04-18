@@ -30,9 +30,7 @@ const login = () => {
       try {
         const token = await AsyncStorage.getItem("authToken");
         if (token) {
-          console.log(token)
-          fetchUser()
-          
+          router.replace("/(tabs)/home")
         }
       } catch (error) {
         console.log(error);
@@ -41,59 +39,6 @@ const login = () => {
 
     checkLoginStatus();
   }, [])
-
-
-
-
-
-
-
- 
-    const fetchUser = async () => {
-      console.log("fetchinguser")
-      const token = await AsyncStorage.getItem("authToken");
-      const decodedToken = jwtDecode(token);
-      const userId = decodedToken.userId;
-      setUserId(userId);
-      console.log(userId)
-    };
-
-  
-
-  useEffect(() => {
-    if (userId) {
-      console.log("fetchinguserprofile")
-      fetchUserProfile();
-    }
-  }, [userId]);
-
-  const fetchUserProfile = async () => {
-    try {
-      console.log(userId+"user Id from fetchuserProfile")
-      const response = await axios.get(
-        `https://server-51or.onrender.com/profile/${userId}`
-      );
-      const userData = response.data.user;
-      setUser(userData);
-      console.log(userData)
-  
-      
-      if(userData.status != "blocked" ) {
-        console.log("blocked")
-        router.replace("/(tabs)/home")
-      }else{
-        console.log("unblocked")
-        router.replace("/(tabs)/home/blocked")
-
-        
-
-      }
-    
-    } catch (error) {
-      console.log("error fetching user profile", error);
-    }
-  };
-
 
 
 
@@ -116,7 +61,7 @@ const login = () => {
 
       const token = response.data.token;
       const MF = AsyncStorage.setItem("authToken", token);
-      // router.replace("/(tabs)/home")
+      router.replace("/(tabs)/home")
     })
   }
   return (
