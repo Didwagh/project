@@ -113,19 +113,13 @@ const ProfileCard = () => {
           </View>
         ))}
 
-        
+
       </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  postsContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    paddingHorizontal: 15,
-  },
   postsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",

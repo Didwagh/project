@@ -1,3 +1,4 @@
+
 import {
   StyleSheet,
   Text,
@@ -59,7 +60,6 @@ const index = () => {
       };
 
       const response = await axios.post(
-        // "http://192.168.0.144:3000/create",
         "https://server-51or.onrender.com/create",
         postData
       );
@@ -219,4 +219,4 @@ const index = () => {
 
 export default index;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({}); 

@@ -178,21 +178,20 @@ const ProfileCard = () => {
       </View>
 
 
-      <ScrollView contentContainerStyle={styles.postsContainer}>
-
-        {posts.map((post, index) => (
-          <View key={index} style={styles.postContainer}>
-            {post.image ? (
-              <Image source={{ uri: post.image }} style={styles.postImage} />
-            ) : (
-              <Text>No Image</Text>
-            )}
-            {/* Add additional elements as needed */}
-          </View>
-        ))}
-
-
-      </ScrollView>
+      {user.private && (user.private === "" || user.private !== "private") && (
+  <ScrollView contentContainerStyle={styles.postsContainer}>
+    {posts.map((post, index) => (
+      <View key={index} style={styles.postContainer}>
+        {post.image ? (
+          <Image source={{ uri: post.image }} style={styles.postImage} />
+        ) : (
+          <Text>No Image</Text>
+        )}
+        {/* Add additional elements as needed */}
+      </View>
+    ))}
+  </ScrollView>
+)}
 
 
     </View>

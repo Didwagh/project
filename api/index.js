@@ -68,8 +68,19 @@ app.post("/register", async (req, res) => {
       email,
       password,
       profileImage,
-    });
+      verified: false,
+      status: "",
+      private: "",
+      verificationToken: "", 
+     
+      profileImage: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/510px-Default_pfp.svg.png", // Add this line for the profileImage field
+      connections: [], 
+      connectionRequests: [], 
+      sentConnectionRequests: [],
+      posts: [], 
 
+      
+    });
     //generate the verification token
     newUser.verificationToken = crypto.randomBytes(20).toString("hex");
 

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Picker } from 'react-native'; // Import Picker
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Picker, Image, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 
 const EditProfile = () => {
   const [userId, setUserId] = useState('');
@@ -11,9 +13,10 @@ const EditProfile = () => {
     profileImage: '',
     title: '',
     description: '',
-    private: false // Add private property to user state
+    private: false
   });
-  const [privateValue, setPrivateValue] = useState(false); // State to manage dropdown value
+  const [privateValue, setPrivateValue] = useState(false);
+  const [image, setImage] = useState('');
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,10 +32,10 @@ const EditProfile = () => {
 
   const fetchUserProfile = async (userId) => {
     try {
-      const response = await axios.get(`https://server-51or.onrender.com/profile/${userId}`);
+      const response = await axios.get(`http://localhost:3000/profile/${userId}`);
       const userData = response.data.user;
       setUser(userData);
-      setPrivateValue(userData.private); // Set dropdown value from fetched user data
+      setPrivateValue(userData.private);
     } catch (error) {
       console.log('error fetching user profile', error);
     }
@@ -47,18 +50,63 @@ const EditProfile = () => {
 
   const handleSave = async () => {
     try {
-      const updatedUser = { ...user, private: privateValue }; // Include private value in the user object
-      const response = await axios.put(`https://server-51or.onrender.com/profile/${userId}`, updatedUser);
+      const updatedUser = { ...user, private: privateValue };
+      const response = await axios.put(`http://localhost:3000/users/${userId}`, updatedUser);
       if (response.status === 200) {
         console.log('User info updated successfully');
       }
     } catch (error) {
       console.error('Error updating user info:', error);
     }
-    console.log(user)
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+
+  const uploadImage = async () => {
+    try {
+      const { uri } = await FileSystem.getInfoAsync(image);
+
+      if (!uri) {
+        throw new Error("Invalid file URI");
+      }
+
+      const formData = new FormData();
+      formData.append('image', {
+        uri,
+        name: 'image.jpg',
+        type: 'image/jpeg',
+      });
+
+      const response = await axios.post('https://your-upload-url.com', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      console.log('Image uploaded:', response.data);
+
+      // Update user profile with the image URL
+      const updatedUser = { ...user, profileImage: response.data.imageUrl };
+      setUser(updatedUser);
+    } catch (error) {
+      console.log('Error uploading image:', error);
+    }
   };
 
   return (
+    <ScrollView> 
     <View style={styles.wrapper}>
       <View style={styles.profile}>
         <TextInput
@@ -70,7 +118,7 @@ const EditProfile = () => {
         <TextInput
           style={styles.input}
           placeholder="Title"
-          value={user.bio}
+          value={user.title}
           onChangeText={text => handleInputChange('title', text)}
         />
         <TextInput
@@ -90,11 +138,19 @@ const EditProfile = () => {
             <Picker.Item label="Private" value={true} />
           </Picker>
         </View>
+        {image && <Image source={{ uri: image }} style={{ width: 200, height: 200, marginBottom: 10 }} />}
+        <TouchableOpacity style={styles.btn} onPress={pickImage}>
+          <Text style={{ color: '#fff' }}>Choose Image</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.btn} onPress={uploadImage}>
+          <Text style={{ color: '#fff' }}>Upload Image</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.btn} onPress={handleSave}>
           <Text style={{ color: '#fff' }}>Save</Text>
         </TouchableOpacity>
       </View>
     </View>
+    </ScrollView>
   );
 };
 
@@ -120,7 +176,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 70,
-    elevation: 3
+    elevation: 3,
+    marginBottom: 10
   },
   dropdownContainer: {
     flexDirection: 'row',

@@ -26,11 +26,22 @@ const register = () => {
   const handleRegister = () => {
       console.log("hello")
       const user = {
-          name:name,
-          email:email,
-          password:password,
-          profileImage:image
-      }
+        name,
+        email,
+        password,
+        profileImage: image,
+        verified: false,
+        status: "",
+        private: "",
+        verificationToken: "", // Add this line for the verificationToken field
+        // Add other fields with their default values if needed
+        profileImage: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/510px-Default_pfp.svg.png", // Add this line for the profileImage field
+        connections: [], // Add this line for the connections field
+        connectionRequests: [], // Add this line for the connectionRequests field
+        sentConnectionRequests: [], // Add this line for the sentConnectionRequests field
+        posts: [], // Add this line for the posts field
+      };
+      
 
       axios.post("https://server-51or.onrender.com/register",user).then((response) => {
           console.log(response);
@@ -39,6 +50,7 @@ const register = () => {
           setEmail("");
           setPassword("");
           setImage("");
+          router.replace("/login")
       }).catch((error) => {
           Alert.alert("Registration failed","An error occurred while registering");
           console.log("registration failed",error)
