@@ -12,8 +12,9 @@ const EditProfile = () => {
   const [user, setUser] = useState({
     name: '',
     bio: '',
-    year: '',
-    branch: ''
+    branch: '',
+    passoutYear: '',
+    feBeTeSe: ''
   });
 
   useEffect(() => {
@@ -67,6 +68,10 @@ const EditProfile = () => {
     }
   };
 
+  // Generate years from 1901 to the current year
+  const currentYear = new Date().getFullYear();
+  const years = Array.from(new Array(currentYear - 1900), (val, index) => 1901 + index);
+
   return (
     <ScrollView> 
       <View style={styles.wrapper}>
@@ -84,19 +89,6 @@ const EditProfile = () => {
             onChangeText={text => handleInputChange('bio', text)}
           />
           <View style={styles.dropdownContainer}>
-            <Text style={styles.dropdownLabel}>Passout Year:</Text>
-            <Picker
-              selectedValue={user.year}
-              style={styles.dropdown}
-              onValueChange={(itemValue, itemIndex) => handleInputChange('year', itemValue)}>
-              <Picker.Item label="Select Year" value="" />
-              <Picker.Item label="FE" value="FE" />
-              <Picker.Item label="SE" value="SE" />
-              <Picker.Item label="TE" value="TE" />
-              <Picker.Item label="BE" value="BE" />
-            </Picker>
-          </View>
-          <View style={styles.dropdownContainer}>
             <Text style={styles.dropdownLabel}>Branch:</Text>
             <Picker
               selectedValue={user.branch}
@@ -105,6 +97,31 @@ const EditProfile = () => {
               <Picker.Item label="Select Branch" value="" />
               <Picker.Item label="Computer Engineering" value="CMPN" />
               <Picker.Item label="Electronics and Telecommunication Engineering" value="EXTC" />
+            </Picker>
+          </View>
+          <View style={styles.dropdownContainer}>
+            <Text style={styles.dropdownLabel}>Fe/Be/Te/Se:</Text>
+            <Picker
+              selectedValue={user.feBeTeSe}
+              style={styles.dropdown}
+              onValueChange={(itemValue, itemIndex) => handleInputChange('feBeTeSe', itemValue)}>
+              <Picker.Item label="Select Fe/Be/Te/Se" value="" />
+              <Picker.Item label="FE" value="FE" />
+              <Picker.Item label="BE" value="BE" />
+              <Picker.Item label="TE" value="TE" />
+              <Picker.Item label="SE" value="SE" />
+            </Picker>
+          </View>
+          <View style={styles.dropdownContainer}>
+            <Text style={styles.dropdownLabel}>Passout Year:</Text>
+            <Picker
+              selectedValue={user.passoutYear}
+              style={styles.dropdown}
+              onValueChange={(itemValue, itemIndex) => handleInputChange('passoutYear', itemValue)}>
+              <Picker.Item label="Select Passout Year" value="" />
+              {years.map((year, index) => (
+                <Picker.Item key={index} label={year.toString()} value={year.toString()} />
+              ))}
             </Picker>
           </View>
           <TouchableOpacity style={styles.btn} onPress={handleSave}>

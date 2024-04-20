@@ -606,3 +606,42 @@ app.get('/users', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+
+
+app.post("/regteacher", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    // Check if the email is already registered
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      console.log("Email already registered");
+      return res.status(400).json({ message: "Email already registered" });
+    }
+
+    // Create a new User
+    const newUser = new User({
+      email,
+      password,
+      verified: true, // Set verified to true
+      name: "", // Add name field with default value
+      profileImage: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/510px-Default_pfp.svg.png", // Add profileImage field with default value
+      status: "",
+      private: "",
+      verificationToken: "",
+      connections: [],
+      connectionRequests: [],
+      sentConnectionRequests: [],
+      posts: [],
+    });
+
+    // Save the new user to the database
+    await newUser.save();
+    console.log(newUser.verified);
+
+    res.status(201).json({ message: "User registered successfully", user: newUser });
+  } catch (error) {
+    console.log("Error registering user", error);
+    res.status(500).json({ message: "Registration failed" });
+  }
+});
