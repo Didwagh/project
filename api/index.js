@@ -595,3 +595,14 @@ app.get('/post/:userId', async (req, res) => {
 //     res.status(500).json({ message: "Server error" });
 //   }
 // });
+
+
+app.get('/users', async (req, res) => {
+  try {
+    const users = await User.find({ status: { $eq: 'unblocked' } });
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
