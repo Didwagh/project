@@ -57,7 +57,7 @@ const Index = () => {
       try {
         const response = await axios.get("https://server-51or.onrender.com/all");
         setPosts(response.data.posts);
-        console.log(posts)
+        // console.log(posts)
       } catch (error) {
         console.log("error fetching posts", error);
       }

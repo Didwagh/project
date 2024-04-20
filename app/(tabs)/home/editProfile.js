@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Picker, Image, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Picker, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
-import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
+import { useRouter } from "expo-router";
 
 const EditProfile = () => {
   const [userId, setUserId] = useState('');
+  const router = useRouter();
+
   const [user, setUser] = useState({
     name: '',
-    profileImage: '',
-    title: '',
-    description: '',
-    private: false
+    bio: '',
+    year: '',
+    branch: ''
   });
-  const [privateValue, setPrivateValue] = useState(false);
-  const [image, setImage] = useState('');
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -35,7 +33,6 @@ const EditProfile = () => {
       const response = await axios.get(`http://localhost:3000/profile/${userId}`);
       const userData = response.data.user;
       setUser(userData);
-      setPrivateValue(userData.private);
     } catch (error) {
       console.log('error fetching user profile', error);
     }
@@ -50,106 +47,74 @@ const EditProfile = () => {
 
   const handleSave = async () => {
     try {
-      const updatedUser = { ...user, private: privateValue };
-      const response = await axios.put(`http://localhost:3000/users/${userId}`, updatedUser);
+      const response = await axios.put(`http://localhost:3000/users/${userId}`, user);
       if (response.status === 200) {
         console.log('User info updated successfully');
+        console.log(user)
       }
     } catch (error) {
       console.error('Error updating user info:', error);
     }
   };
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-    if (!result.cancelled) {
-      setImage(result.uri);
-    }
-  };
-
-  const uploadImage = async () => {
+  const handleLogout = async () => {
     try {
-      const { uri } = await FileSystem.getInfoAsync(image);
-
-      if (!uri) {
-        throw new Error("Invalid file URI");
-      }
-
-      const formData = new FormData();
-      formData.append('image', {
-        uri,
-        name: 'image.jpg',
-        type: 'image/jpeg',
-      });
-
-      const response = await axios.post('https://your-upload-url.com', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-
-      console.log('Image uploaded:', response.data);
-
-      // Update user profile with the image URL
-      const updatedUser = { ...user, profileImage: response.data.imageUrl };
-      setUser(updatedUser);
+      await AsyncStorage.removeItem('authToken');
+      router.push("/(authenticate)/login")
+      
     } catch (error) {
-      console.log('Error uploading image:', error);
+      console.error('Error logging out:', error);
     }
   };
 
   return (
     <ScrollView> 
-    <View style={styles.wrapper}>
-      <View style={styles.profile}>
-        <TextInput
-          style={styles.input}
-          placeholder="Name"
-          value={user.name}
-          onChangeText={text => handleInputChange('name', text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Title"
-          value={user.title}
-          onChangeText={text => handleInputChange('title', text)}
-        />
-        <TextInput
-          style={[styles.input, { height: 100 }]}
-          placeholder="Description"
-          multiline
-          value={user.description}
-          onChangeText={text => handleInputChange('description', text)}
-        />
-        <View style={styles.dropdownContainer}>
-          <Text style={styles.dropdownLabel}>Private:</Text>
-          <Picker
-            selectedValue={privateValue}
-            style={styles.dropdown}
-            onValueChange={(itemValue, itemIndex) => setPrivateValue(itemValue)}>
-            <Picker.Item label="Public" value={false} />
-            <Picker.Item label="Private" value={true} />
-          </Picker>
+      <View style={styles.wrapper}>
+        <View style={styles.profile}>
+          <TextInput
+            style={styles.input}
+            placeholder="Name"
+            value={user.name}
+            onChangeText={text => handleInputChange('name', text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Bio"
+            value={user.bio}
+            onChangeText={text => handleInputChange('bio', text)}
+          />
+          <View style={styles.dropdownContainer}>
+            <Text style={styles.dropdownLabel}>Passout Year:</Text>
+            <Picker
+              selectedValue={user.year}
+              style={styles.dropdown}
+              onValueChange={(itemValue, itemIndex) => handleInputChange('year', itemValue)}>
+              <Picker.Item label="Select Year" value="" />
+              <Picker.Item label="FE" value="FE" />
+              <Picker.Item label="SE" value="SE" />
+              <Picker.Item label="TE" value="TE" />
+              <Picker.Item label="BE" value="BE" />
+            </Picker>
+          </View>
+          <View style={styles.dropdownContainer}>
+            <Text style={styles.dropdownLabel}>Branch:</Text>
+            <Picker
+              selectedValue={user.branch}
+              style={styles.dropdown}
+              onValueChange={(itemValue, itemIndex) => handleInputChange('branch', itemValue)}>
+              <Picker.Item label="Select Branch" value="" />
+              <Picker.Item label="Computer Engineering" value="CMPN" />
+              <Picker.Item label="Electronics and Telecommunication Engineering" value="EXTC" />
+            </Picker>
+          </View>
+          <TouchableOpacity style={styles.btn} onPress={handleSave}>
+            <Text style={{ color: '#fff' }}>Save</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btn} onPress={handleLogout}>
+            <Text style={{ color: '#fff' }}>Logout</Text>
+          </TouchableOpacity>
         </View>
-        {image && <Image source={{ uri: image }} style={{ width: 200, height: 200, marginBottom: 10 }} />}
-        <TouchableOpacity style={styles.btn} onPress={pickImage}>
-          <Text style={{ color: '#fff' }}>Choose Image</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.btn} onPress={uploadImage}>
-          <Text style={{ color: '#fff' }}>Upload Image</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.btn} onPress={handleSave}>
-          <Text style={{ color: '#fff' }}>Save</Text>
-        </TouchableOpacity>
       </View>
-    </View>
     </ScrollView>
   );
 };

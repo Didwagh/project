@@ -62,6 +62,8 @@ const ProfileCard = () => {
 
   return (
     <View style={styles.wrapper}>
+     
+
       <Pressable onPress={() => router.push("/home/editProfile")}>
         <Text>hmm</Text>
       </Pressable>
@@ -74,6 +76,23 @@ const ProfileCard = () => {
           A front-end web developer is responsible for implementing visual
           elements that users.
         </Text>
+        {user && user.name === "admin" && (
+          <View> 
+              < TouchableOpacity onPress={() => router.push("/home/admin")}>
+          <Text style={styles.addButton}>Add Teachers</Text>
+          
+        </TouchableOpacity>
+              < TouchableOpacity onPress={() => router.push("/home/bannedUser")}>
+          <Text style={styles.addButton}>Add bannrf</Text>
+          
+        </TouchableOpacity>
+          </View>
+     
+
+  
+          
+     
+      )}
       </View>
       <View style={styles.socialIcons}>
         <View style={styles.icon}>
@@ -97,7 +116,9 @@ const ProfileCard = () => {
           <Text style={styles.followers}>100k</Text>
           <Text>Followers</Text>
         </View>
+        
       </View>
+    
 
       {/* Render posts */}
       <ScrollView contentContainerStyle={styles.postsContainer}>
@@ -115,6 +136,7 @@ const ProfileCard = () => {
 
 
       </ScrollView>
+      
     </View>
   );
 };
@@ -195,6 +217,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 5,
     fontWeight: "bold",
+  },
+  addButton: {
+    color: "#6452E9",
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
+    marginLeft: 15,
   },
 });
 
