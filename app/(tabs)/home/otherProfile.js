@@ -31,10 +31,10 @@ const ProfileCard = () => {
       const token = await AsyncStorage.getItem("authToken");
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.userId;
-      console.log(userId)
+    
       setAdminId(userId);
       fetchadminUserProfile(userId);
-      console.log(adminId)
+     
     };
 
     fetchUser();
@@ -43,13 +43,13 @@ const ProfileCard = () => {
 
   const fetchadminUserProfile = async (userId) => {
     try {
-      console.log(userId)
+    
       const response = await axios.get(
         `https://server-51or.onrender.com/profile/${userId}`
       );
       const userData = response.data.user;
       setAdmin(userData)
-      console.log(userData)
+     
     } catch (error) {
       console.log("error fetching user profile", error);
     }
@@ -58,7 +58,7 @@ const ProfileCard = () => {
   const route = useRoute();
   const { params } = route;
   const userId = params.userId;
-  console.log(userId)
+
 
 
   useEffect(() => {
@@ -108,7 +108,8 @@ const ProfileCard = () => {
         }));
       }
 
-      console.log(user);
+      console.log(user)
+      
     } catch (error) {
       console.error('Error changing user status:', error);
     }
@@ -118,6 +119,8 @@ const ProfileCard = () => {
     try {
       const response = await axios.get(`http://localhost:3000/post/${userId}`);
       setPosts(response.data);
+      console.log(posts)
+      console.log(response.data)
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
@@ -178,20 +181,19 @@ const ProfileCard = () => {
       </View>
 
 
-      {user.private && (user.private === "" || user.private !== "private") && (
   <ScrollView contentContainerStyle={styles.postsContainer}>
     {posts.map((post, index) => (
       <View key={index} style={styles.postContainer}>
         {post.image ? (
-          <Image source={{ uri: post.image }} style={styles.postImage} />
+          <Image source={{ uri: post.imageUrl }} style={styles.postImage} />
         ) : (
-          <Text>No Image</Text>
+          <Text>{post.uri}</Text>
         )}
-        {/* Add additional elements as needed */}
+       <Text>{post.imageUrl}</Text>
       </View>
     ))}
   </ScrollView>
-)}
+
 
 
     </View>

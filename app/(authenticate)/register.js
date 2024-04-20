@@ -45,12 +45,12 @@ const register = () => {
 
       axios.post("https://server-51or.onrender.com/register",user).then((response) => {
           console.log(response);
-          Alert.alert("Registration successful","You have been registered successfully");
+          // Alert.alert("Registration successful","You have been registered successfully");
           setName("");
+          router.replace("/login")
           setEmail("");
           setPassword("");
           setImage("");
-          router.replace("/login")
       }).catch((error) => {
           Alert.alert("Registration failed","An error occurred while registering");
           console.log("registration failed",error)

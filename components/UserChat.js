@@ -58,7 +58,7 @@ const UserChat = ({ item, userId }) => {
       <View>
         <Image
           style={{ width: 60, height: 60, borderRadius: 35 }}
-          source={{ uri: item?.profileImages }}
+          source={{ uri: item?.profileImage || "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/510px-Default_pfp.svg.png"}}
         />
       </View>
 

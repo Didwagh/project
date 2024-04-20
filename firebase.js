@@ -3,15 +3,13 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/storage"
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBwUK7tMp-UuOMzyWxDF7AD-y1WlnQtOuw",
-  //  apiKey: "AIzaSyBwUK7tMp-UuOMzyWxDF7AD-y1WlnQtOuw",
-  authDomain: "lnapp-b2bd0.firebaseapp.com",
-  projectId: "lnapp-b2bd0",
-  storageBucket: "lnapp-b2bd0.appspot.com",
-  messagingSenderId: "1028192174321",
-  appId: "1:1028192174321:web:51e26b41873230e5272950"
+  apiKey: "AIzaSyCaIvCAWBxLps5dakPTD3VUudASiorE2GY",
+  authDomain: "thisproject-e2260.firebaseapp.com",
+  projectId: "thisproject-e2260",
+  storageBucket: "thisproject-e2260.appspot.com",
+  messagingSenderId: "433497637906",
+  appId: "1:433497637906:web:e1fb0d4a135806248684cb"
 };
-
 
 if(!firebase.apps.length){
     firebase.initializeApp(firebaseConfig)

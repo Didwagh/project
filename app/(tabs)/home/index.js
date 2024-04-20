@@ -39,10 +39,11 @@ const Index = () => {
       const userData = response.data.user;
       setUser(userData);
 
-      // if(userData.status != "blocked" ) {
-      // }else{
-      //   router.replace("/blocked")
-      // }
+      if(userData.status != `blocked` ) {
+        
+      }else{
+        router.replace("/blocked")
+      }
 
 
 
@@ -56,6 +57,7 @@ const Index = () => {
       try {
         const response = await axios.get("https://server-51or.onrender.com/all");
         setPosts(response.data.posts);
+        console.log(posts)
       } catch (error) {
         console.log("error fetching posts", error);
       }
@@ -117,13 +119,15 @@ const Index = () => {
   //   );
   // };
 
-
   const deletePost = async (postId) => {
     try {
+      // Confirm with the admin before deleting the post
+      const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+      if (!confirmDelete) return; // If admin cancels, exit the function
+  
       const response = await axios.delete(`http://localhost:3000/posts/${postId}`);
       if (response.status === 200) {
         console.log('Post deleted successfully');
-
       } else {
         console.log('Failed to delete post');
         // Handle other status codes if needed
@@ -134,8 +138,6 @@ const Index = () => {
     }
   };
 
-
-  
 
   const router = useRouter();
 
@@ -203,7 +205,10 @@ const Index = () => {
                 </Pressable>
               )}
             </View>
-            <Image style={{ width: "100%", height: 240 }} source={{ uri: item?.imageUrl }} />
+            <Image
+              style={{ width: "100%", height: 240 }}
+              source={{ uri: item?.imageUrl || "https://i.ytimg.com/vi/3SZDBUD0CzE/maxresdefault.jpg" }}
+            />
             {item?.likes?.length > 0 && (
               <View style={{ padding: 10, flexDirection: "row", alignItems: "center", gap: 6 }}>
                 <SimpleLineIcons name="like" size={16} color="#0072b1" />

@@ -107,9 +107,9 @@ const ProfileCard = () => {
             {post.image ? (
               <Image source={{ uri: post.image }} style={styles.postImage} />
             ) : (
-              <Text>No Image</Text>
+              <Text>no image</Text>
             )}
-            {/* Add additional elements as needed */}
+           <Text>yes image</Text>
           </View>
         ))}
 
