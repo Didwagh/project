@@ -31,10 +31,10 @@ const ProfileCard = () => {
       const token = await AsyncStorage.getItem("authToken");
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.userId;
-    
+
       setAdminId(userId);
       fetchadminUserProfile(userId);
-     
+
     };
 
     fetchUser();
@@ -43,13 +43,13 @@ const ProfileCard = () => {
 
   const fetchadminUserProfile = async (userId) => {
     try {
-    
+
       const response = await axios.get(
         `https://server-51or.onrender.com/profile/${userId}`
       );
       const userData = response.data.user;
       setAdmin(userData)
-     
+
     } catch (error) {
       console.log("error fetching user profile", error);
     }
@@ -109,7 +109,7 @@ const ProfileCard = () => {
       }
 
       console.log(user)
-      
+
     } catch (error) {
       console.error('Error changing user status:', error);
     }
@@ -127,6 +127,34 @@ const ProfileCard = () => {
   };
 
 
+
+
+
+
+
+
+
+
+  const [connectionSent, setConnectionSent] = useState(false);
+  const sendConnectionRequest = async (adminId, userId) => {
+    try {
+      console.log("first")
+      const response = await fetch("https://server-51or.onrender.com/connection-request", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ adminId, userId }),
+      });
+      console.log(response)
+
+      if (response.ok) {
+        setConnectionSent(true);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
   return (
     <View style={styles.wrapper}>
 
@@ -138,20 +166,35 @@ const ProfileCard = () => {
         <Text style={styles.name}>{user?.name}</Text>
         <Text style={styles.title}>Front-End Developer</Text>
         <Text style={styles.description}>
-        {user?.passoutYear}{user?.passout}
+          {user?.passoutYear}
         </Text>
         <Text style={styles.title}></Text>
         <Text style={styles.title}></Text>
         <View style={{ flex: 1, flexDirection: 'row' }}>
-          <TouchableOpacity style={styles.btn}>
-            <Text style={{ color: "#fff" }}>Follow</Text>
-          </TouchableOpacity>
+          <Pressable
+            onPress={() => sendConnectionRequest(adminId, userId)}
+            style={{
+              marginLeft: "auto",
+              marginRight: "auto",
+              borderWidth: 1,
+              borderRadius: 25,
+              marginTop: 7,
+              paddingHorizontal: 15,
+              paddingVertical: 4,
+            }}
+          >
+
+
+            <Text style={styles.followButtonText}>
+              {connectionSent ? "Pending" : "Connect"}
+            </Text>
+          </Pressable>
 
 
 
           {admin?.name === "admin" && (
             <TouchableOpacity style={styles.btn} onPress={handleBlock} >
-              <Text style={{ color: "#fff" }}>{user?.status === 'blocked' ? 'Block' : 'Unblock'}</Text>
+              <Text style={{ color: "#000" }}>{user?.status === 'blocked' ? 'Block' : 'Unblock'}</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -183,16 +226,16 @@ const ProfileCard = () => {
 
 
       <ScrollView contentContainerStyle={styles.postsContainer}>
-  {posts.map((post, index) => (
-    <View key={index} style={styles.postContainer}>
-      {post.imageUrl ? (
-        <Image source={{ uri: post.imageUrl }} style={styles.postImage} />
-      ) : (
-        <Image source={{ uri: 'https://i.ytimg.com/vi/3SZDBUD0CzE/maxresdefault.jpg' }} style={styles.postImage} />
-      )}
-    </View>
-  ))}
-</ScrollView>
+        {posts.map((post, index) => (
+          <View key={index} style={styles.postContainer}>
+            {post.imageUrl ? (
+              <Image source={{ uri: post.imageUrl }} style={styles.postImage} />
+            ) : (
+              <Image source={{ uri: 'https://i.ytimg.com/vi/3SZDBUD0CzE/maxresdefault.jpg' }} style={styles.postImage} />
+            )}
+          </View>
+        ))}
+      </ScrollView>
 
     </View>
   );
@@ -200,11 +243,13 @@ const ProfileCard = () => {
 
 const styles = StyleSheet.create({
   postsContainer: {
+    marginTop: 25,
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
     paddingHorizontal: 15,
   },
+
   postImage: {
     width: "100%",
     aspectRatio: 1, // Maintain aspect ratio
@@ -254,12 +299,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   btn: {
-    backgroundColor: "#6452E9",
-    paddingVertical: 10,
-    marginRight: 30,
-    paddingHorizontal: 20,
-    borderRadius: 70,
-    elevation: 3,
+    marginLeft: "auto",
+    marginRight: "auto",
+    borderWidth: 1,
+    borderRadius: 25,
+    marginTop: 7,
+    paddingHorizontal: 15,
+    paddingVertical: 4,
   },
   socialIcons: {
     flexDirection: "row",

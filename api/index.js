@@ -419,17 +419,15 @@ app.post("/like/:postId/:userId", async (req, res) => {
 app.put("/profile/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
-    const { userDescription } = req.body;
-
-    await User.findByIdAndUpdate(userId, { userDescription });
-
-    res.status(200).json({ message: "User profile updated successfully" });
+    const { name, bio, branch, alumni, passoutYear, year } = req.body;
+    await User.findByIdAndUpdate(userId, { name, bio, branch, alumni, passoutYear, year });
+    const updatedUser = await User.findById(userId);
+    res.status(200).json({ message: "User profile updated successfully", user: updatedUser });
   } catch (error) {
-    console.log("Error updating user Profile", error);
+    console.log("Error updating user profile", error);
     res.status(500).json({ message: "Error updating user profile" });
   }
 });
-
 // we are getting the creating messages 
 io.on("connection", (socket) => {
   console.log("a user is connected");
@@ -612,7 +610,7 @@ app.get('/users', async (req, res) => {
 app.post("/regteacher", async (req, res) => {
   try {
     const { email, password } = req.body;
-    // Check if the email is already registered
+    // Check if the email is already registeredapp
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       console.log("Email already registered");

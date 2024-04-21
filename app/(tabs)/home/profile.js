@@ -1,3 +1,8 @@
+import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
+import { useRouter } from "expo-router";
 import {
   StyleSheet,
   Text,
@@ -5,14 +10,8 @@ import {
   ScrollView,
   Pressable,
   Image,
-  TextInput,
   TouchableOpacity
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { jwtDecode } from "jwt-decode";
-import axios from "axios";
-import { useRouter } from "expo-router";
 
 const ProfileCard = () => {
   const [userId, setUserId] = useState("");
@@ -26,7 +25,6 @@ const ProfileCard = () => {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.userId;
       setUserId(userId);
-      console.log(userId);
     };
 
     fetchUser();
@@ -35,7 +33,7 @@ const ProfileCard = () => {
   useEffect(() => {
     if (userId) {
       fetchUserProfile();
-      fetchUserPosts();
+      fetchUserPosts()
     }
   }, [userId]);
 
@@ -51,181 +49,119 @@ const ProfileCard = () => {
     }
   };
 
+  const handleEditProfile = () => {
+    router.push("/home/editProfile");
+  };
+
+  const handleAddTeacher = () => {
+    router.push("/home/admin");
+  };
+
+  const handleBlockUser = () => {
+    router.push("/home/bannedUser");
+  };
   const fetchUserPosts = async () => {
     try {
       const response = await axios.get(`http://localhost:3000/post/${userId}`);
       setPosts(response.data);
+      console.log(posts)
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
   };
 
   return (
-    <View style={styles.wrapper}>
-
-
-      <Pressable onPress={() => router.push("/home/editProfile")}>
-        <Text>hmm</Text>
-      </Pressable>
-
+    <View style={styles.container}>
+      <TouchableOpacity onPress={handleEditProfile} style={styles.editButton}>
+        <Text>Edit Profile</Text>
+      </TouchableOpacity>
       <View style={styles.profile}>
-        <Image style={styles.thumbnail} source={{ uri: user?.profileImage }} />
+        <Image style={styles.thumbnail} resizeMode="contain" source={{ uri: user?.profileImage }} />
         <Text style={styles.name}>{user?.name}</Text>
-
-
-        <Text style={styles.description}>
-          A front-end web developer is responsible for implementing visual
-          elements that users.
-        </Text>
-        <Text style={styles.title}>{user?.passout}</Text>
-        <Text style={styles.title}>{user?.passout}</Text>
-        {user && user.name === "admin" && (
-          <View>
-            < TouchableOpacity onPress={() => router.push("/home/admin")}>
-              <Text style={styles.addButton}>Add Teachers</Text>
-
-            </TouchableOpacity>
-            < TouchableOpacity onPress={() => router.push("/home/bannedUser")}>
-              <Text style={styles.addButton}>Add bannrf</Text>
-
-            </TouchableOpacity>
-          </View>
-
-
-
-
-
-        )}
+        <Text style={styles.bio}>{user?.bio}</Text>
+        <View style={styles.branchYearContainer}>
+          <Text style={styles.branchYear}>Branch: {user?.branch}, Year: {user?.year}</Text>
+        </View>
       </View>
-      <View style={styles.socialIcons}>
-        <View style={styles.icon}>
-          <TouchableOpacity>
-            <Text>Instagram Icon</Text>
-          </TouchableOpacity>
-          <Text style={styles.followers}>98.5k</Text>
-          <Text>Followers</Text>
-        </View>
-        <View style={styles.icon}>
-          <TouchableOpacity>
-            <Text>Facebook Icon</Text>
-          </TouchableOpacity>
-          <Text style={styles.followers}>44.5k</Text>
-          <Text>Followers</Text>
-        </View>
-        <View style={styles.icon}>
-          <TouchableOpacity>
-            <Text>YouTube Icon</Text>
-          </TouchableOpacity>
-          <Text style={styles.followers}>100k</Text>
-          <Text>Followers</Text>
-        </View>
+      <TouchableOpacity onPress={handleAddTeacher} style={styles.addButton}>
+        <Text style={styles.buttonText}>Add Teacher</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleBlockUser} style={styles.blockButton}>
+        <Text style={styles.buttonText}>Block User</Text>
+      </TouchableOpacity>
 
-      </View>
-
-
-      {/* Render posts */}
       <ScrollView contentContainerStyle={styles.postsContainer}>
-
-        {posts.map((post, index) => (
-          <View key={index} style={styles.postContainer}>
-            {post.image ? (
+        {posts.map((post) => (
+          <View key={post._id} style={styles.postContainer}>
+        
+            {post.imageUrl ? (
               <Image source={{ uri: post.imageUrl }} style={styles.postImage} />
             ) : (
-              <Image source={{ uri: 'https://i.ytimg.com/vi/3SZDBUD0CzE/maxresdefault.jpg' }} style={styles.postImage} />
+              <Text>No Image Available</Text>
             )}
           </View>
         ))}
-
-
       </ScrollView>
-
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  postsContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    paddingHorizontal: 15,
-  },
-  postImage: {
-    width: "100%",
-    aspectRatio: 1, // Maintain aspect ratio
-    borderRadius: 10,
-  },
-  wrapper: {
+  container: {
     flex: 1,
-    alignItems: "flex-end",
-    marginTop: 10,
-    marginRight: 25,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
   },
-  topIcons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    paddingHorizontal: 15,
-    marginBottom: 20,
-  },
-  postContainer: {
-    width: "30%", // Adjust the width based on the requirement to have 3 posts per row
-    marginBottom: 10,
+  editButton: {
+    position: "absolute",
+    top: 20,
+    right: 20,
   },
   profile: {
+    marginTop: 50,
     alignItems: "center",
     marginBottom: 20,
   },
   thumbnail: {
     width: 150,
     height: 150,
-    borderRadius: 100,
-    marginBottom: 15,
+    borderRadius: 75,
+    marginBottom: 10,
   },
   name: {
     fontSize: 24,
-    fontWeight: "600",
-    marginBottom: 5,
-  },
-  title: {
-    fontSize: 12,
-    color: "#7C8097",
-    letterSpacing: 1.5,
-    textTransform: "uppercase",
-    marginBottom: 10,
-  },
-  description: {
-    fontSize: 14,
-    marginBottom: 15,
-    textAlign: "center",
-    paddingHorizontal: 20,
-  },
-  btn: {
-    backgroundColor: "#6452E9",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 70,
-    elevation: 3,
-  },
-  socialIcons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-  },
-  icon: {
-    alignItems: "center",
-  },
-  followers: {
-    marginTop: 10,
-    marginBottom: 5,
     fontWeight: "bold",
+    marginBottom: 5,
+  },
+  bio: {
+    fontSize: 16,
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  branchYearContainer: {
+    flexDirection: "row",
+    marginBottom: 20,
+  },
+  branchYear: {
+    fontSize: 16,
+    marginRight: 10,
   },
   addButton: {
-    color: "#6452E9",
-    fontSize: 16,
-    fontWeight: "bold",
+    backgroundColor: "#fff",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
     marginBottom: 10,
-    marginLeft: 15,
+  },
+  blockButton: {
+    backgroundColor: "#fff",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "#6452E9",
   },
 });
 

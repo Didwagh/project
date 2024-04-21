@@ -39,11 +39,11 @@ const Index = () => {
       const userData = response.data.user;
       setUser(userData);
 
-      if(userData.status != `blocked` ) {
+      // if(userData.status != `blocked` ) {
         
-        router.replace("/blocked")
-      }else{
-      }
+      //   router.replace("/blocked")
+      // }else{
+      // }
 
 
 

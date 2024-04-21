@@ -1,44 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Picker, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
 import axios from 'axios';
-import { useRouter } from "expo-router";
+import { useNavigation } from '@react-navigation/native';
 
 const EditProfile = () => {
-  const [userId, setUserId] = useState('');
-  const router = useRouter();
+  const navigation = useNavigation();
 
   const [user, setUser] = useState({
     name: '',
     bio: '',
     branch: '',
     passoutYear: '',
-    feBeTeSe: '',
-    alumni: false // New state for alumni status
+    year: '',
+    alumni: false
   });
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = await AsyncStorage.getItem('authToken');
-      const decodedToken = jwtDecode(token);
-      const userId = decodedToken.userId;
-      setUserId(userId);
-      fetchUserProfile(userId);
+      try {
+        const token = await AsyncStorage.getItem('authToken');
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId;
+        console.log(userId)
+        const response = await axios.get(`http://localhost:3000/profile/${userId}`);
+        setUser(response.data.user);
+
+      } catch (error) {
+        console.log('Error fetching user profile:', error);
+      }
     };
 
     fetchUser();
   }, []);
-
-  const fetchUserProfile = async (userId) => {
-    try {
-      const response = await axios.get(`http://localhost:3000/profile/${userId}`);
-      const userData = response.data.user;
-      setUser(userData);
-    } catch (error) {
-      console.log('error fetching user profile', error);
-    }
-  };
 
   const handleInputChange = (key, value) => {
     setUser(prevState => ({
@@ -49,7 +44,7 @@ const EditProfile = () => {
 
   const handleSave = async () => {
     try {
-      const response = await axios.put(`http://localhost:3000/users/${userId}`, user);
+      const response = await axios.put(`http://localhost:3000/profile/${user._id}`, user);
       if (response.status === 200) {
         console.log('User info updated successfully');
         console.log(user);
@@ -62,13 +57,12 @@ const EditProfile = () => {
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('authToken');
-      router.push("/(authenticate)/login");
+      navigation.navigate('(authenticate)'); // Assuming the authentication stack is named '(authenticate)'
     } catch (error) {
       console.error('Error logging out:', error);
     }
   };
 
-  // Generate years from 1901 to the current year
   const currentYear = new Date().getFullYear();
   const years = Array.from(new Array(currentYear - 1900), (val, index) => 1901 + index);
 
@@ -92,7 +86,7 @@ const EditProfile = () => {
             <Text style={styles.dropdownLabel}>Branch:</Text>
             <Picker
               selectedValue={user.branch}
-              style={styles.dropdown}
+              style={[styles.dropdown, styles.slimPicker]}
               onValueChange={(itemValue, itemIndex) => handleInputChange('branch', itemValue)}>
               <Picker.Item label="Select Branch" value="" />
               <Picker.Item label="Computer Engineering" value="CMPN" />
@@ -100,12 +94,12 @@ const EditProfile = () => {
             </Picker>
           </View>
           <View style={styles.dropdownContainer}>
-            <Text style={styles.dropdownLabel}>Fe/Be/Te/Se:</Text>
+            <Text style={styles.dropdownLabel}>Select Year</Text>
             <Picker
-              selectedValue={user.feBeTeSe}
-              style={styles.dropdown}
-              onValueChange={(itemValue, itemIndex) => handleInputChange('feBeTeSe', itemValue)}>
-              <Picker.Item label="Select Fe/Be/Te/Se" value="" />
+              selectedValue={user.year}
+              style={[styles.dropdown, styles.slimPicker]}
+              onValueChange={(itemValue, itemIndex) => handleInputChange('year', itemValue)}>
+              <Picker.Item label="Select Year" value="" />
               <Picker.Item label="FE" value="FE" />
               <Picker.Item label="BE" value="BE" />
               <Picker.Item label="TE" value="TE" />
@@ -113,34 +107,38 @@ const EditProfile = () => {
             </Picker>
           </View>
           <View style={styles.dropdownContainer}>
-            <Text style={styles.dropdownLabel}>Passout Year:</Text>
-            <Picker
-              selectedValue={user.passoutYear}
-              style={styles.dropdown}
-              onValueChange={(itemValue, itemIndex) => handleInputChange('passoutYear', itemValue)}>
-              <Picker.Item label="Select Passout Year" value="" />
-              {years.map((year, index) => (
-                <Picker.Item key={index} label={year.toString()} value={year.toString()} />
-              ))}
-            </Picker>
-          </View>
-          <View style={styles.dropdownContainer}>
             <Text style={styles.dropdownLabel}>Alumni/Student:</Text>
             <Picker
               selectedValue={user.alumni ? 'alumni' : 'student'}
-              style={styles.dropdown}
+              style={[styles.dropdown, styles.slimPicker]}
               onValueChange={(itemValue, itemIndex) => handleInputChange('alumni', itemValue === 'alumni')}>
               <Picker.Item label="Select Status" value="" />
               <Picker.Item label="Alumni" value="alumni" />
               <Picker.Item label="Student" value="student" />
             </Picker>
           </View>
-          <TouchableOpacity style={styles.btn} onPress={handleSave}>
-            <Text style={{ color: '#fff' }}>Save</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btn} onPress={handleLogout}>
-            <Text style={{ color: '#fff' }}>Logout</Text>
-          </TouchableOpacity>
+          {user.alumni && (
+            <View style={styles.dropdownContainer}>
+              <Text style={styles.dropdownLabel}>Passout Year:</Text>
+              <Picker
+                selectedValue={user.passoutYear}
+                style={[styles.dropdown, styles.slimPicker]}
+                onValueChange={(itemValue, itemIndex) => handleInputChange('passoutYear', itemValue)}>
+                <Picker.Item label="Select Passout Year" value="" />
+                {years.map((year, index) => (
+                  <Picker.Item key={index} label={year.toString()} value={year.toString()} />
+                ))}
+              </Picker>
+            </View>
+          )}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.btn} onPress={handleSave}>
+              <Text style={{ color: '#fff' }}>Save</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btn} onPress={handleLogout}>
+              <Text style={{ color: '#fff' }}>Logout</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </ScrollView>
@@ -153,7 +151,7 @@ const styles = StyleSheet.create({
     margin: 25
   },
   profile: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginBottom: 20
   },
   input: {
@@ -183,6 +181,13 @@ const styles = StyleSheet.create({
   dropdown: {
     height: 50,
     width: 150
+  },
+  slimPicker: {
+    width: 120
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center'
   }
 });
 

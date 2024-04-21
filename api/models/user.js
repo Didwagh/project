@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
     },
     year: {
         type: String,
+        default:"FE"
         
     },
     branch: {
@@ -22,7 +23,7 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
        
     },
-    passout: {
+    passoutYear: {
         type: String,
       
     },

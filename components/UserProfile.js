@@ -18,7 +18,9 @@ import {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ currentUserId, selectedUserId }),
+          
         });
+        console.log(response)
   
         if (response.ok) {
           setConnectionSent(true);
@@ -58,7 +60,7 @@ import {
             {item?.name}
           </Text>
           <Text style={{ textAlign: "center", marginLeft: 1, marginTop: 2 }}>
-            Engineer Graduate 
+            Engineer Graduate  
           </Text>
         </View>
   
