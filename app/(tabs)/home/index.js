@@ -41,8 +41,8 @@ const Index = () => {
 
       if(userData.status != `blocked` ) {
         
-      }else{
         router.replace("/blocked")
+      }else{
       }
 
 

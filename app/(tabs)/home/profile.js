@@ -62,7 +62,7 @@ const ProfileCard = () => {
 
   return (
     <View style={styles.wrapper}>
-     
+
 
       <Pressable onPress={() => router.push("/home/editProfile")}>
         <Text>hmm</Text>
@@ -71,28 +71,31 @@ const ProfileCard = () => {
       <View style={styles.profile}>
         <Image style={styles.thumbnail} source={{ uri: user?.profileImage }} />
         <Text style={styles.name}>{user?.name}</Text>
-        <Text style={styles.title}>Front-End Developer</Text>
+
+
         <Text style={styles.description}>
           A front-end web developer is responsible for implementing visual
           elements that users.
         </Text>
+        <Text style={styles.title}>{user?.passout}</Text>
+        <Text style={styles.title}>{user?.passout}</Text>
         {user && user.name === "admin" && (
-          <View> 
-              < TouchableOpacity onPress={() => router.push("/home/admin")}>
-          <Text style={styles.addButton}>Add Teachers</Text>
-          
-        </TouchableOpacity>
-              < TouchableOpacity onPress={() => router.push("/home/bannedUser")}>
-          <Text style={styles.addButton}>Add bannrf</Text>
-          
-        </TouchableOpacity>
-          </View>
-     
+          <View>
+            < TouchableOpacity onPress={() => router.push("/home/admin")}>
+              <Text style={styles.addButton}>Add Teachers</Text>
 
-  
-          
-     
-      )}
+            </TouchableOpacity>
+            < TouchableOpacity onPress={() => router.push("/home/bannedUser")}>
+              <Text style={styles.addButton}>Add bannrf</Text>
+
+            </TouchableOpacity>
+          </View>
+
+
+
+
+
+        )}
       </View>
       <View style={styles.socialIcons}>
         <View style={styles.icon}>
@@ -116,9 +119,9 @@ const ProfileCard = () => {
           <Text style={styles.followers}>100k</Text>
           <Text>Followers</Text>
         </View>
-        
+
       </View>
-    
+
 
       {/* Render posts */}
       <ScrollView contentContainerStyle={styles.postsContainer}>
@@ -126,17 +129,16 @@ const ProfileCard = () => {
         {posts.map((post, index) => (
           <View key={index} style={styles.postContainer}>
             {post.image ? (
-              <Image source={{ uri: post.image }} style={styles.postImage} />
+              <Image source={{ uri: post.imageUrl }} style={styles.postImage} />
             ) : (
-              <Text>no image</Text>
+              <Image source={{ uri: 'https://i.ytimg.com/vi/3SZDBUD0CzE/maxresdefault.jpg' }} style={styles.postImage} />
             )}
-           <Text>yes image</Text>
           </View>
         ))}
 
 
       </ScrollView>
-      
+
     </View>
   );
 };

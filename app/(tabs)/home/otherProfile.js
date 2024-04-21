@@ -138,9 +138,10 @@ const ProfileCard = () => {
         <Text style={styles.name}>{user?.name}</Text>
         <Text style={styles.title}>Front-End Developer</Text>
         <Text style={styles.description}>
-          A front-end web developer is responsible for implementing visual
-          elements that users.
+        {user?.passoutYear}{user?.passout}
         </Text>
+        <Text style={styles.title}></Text>
+        <Text style={styles.title}></Text>
         <View style={{ flex: 1, flexDirection: 'row' }}>
           <TouchableOpacity style={styles.btn}>
             <Text style={{ color: "#fff" }}>Follow</Text>
@@ -181,20 +182,17 @@ const ProfileCard = () => {
       </View>
 
 
-  <ScrollView contentContainerStyle={styles.postsContainer}>
-    {posts.map((post, index) => (
-      <View key={index} style={styles.postContainer}>
-        {post.image ? (
-          <Image source={{ uri: post.imageUrl }} style={styles.postImage} />
-        ) : (
-          <Text>{post.uri}</Text>
-        )}
-       <Text>{post.imageUrl}</Text>
-      </View>
-    ))}
-  </ScrollView>
-
-
+      <ScrollView contentContainerStyle={styles.postsContainer}>
+  {posts.map((post, index) => (
+    <View key={index} style={styles.postContainer}>
+      {post.imageUrl ? (
+        <Image source={{ uri: post.imageUrl }} style={styles.postImage} />
+      ) : (
+        <Image source={{ uri: 'https://i.ytimg.com/vi/3SZDBUD0CzE/maxresdefault.jpg' }} style={styles.postImage} />
+      )}
+    </View>
+  ))}
+</ScrollView>
 
     </View>
   );

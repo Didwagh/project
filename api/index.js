@@ -645,3 +645,31 @@ app.post("/regteacher", async (req, res) => {
     res.status(500).json({ message: "Registration failed" });
   }
 });
+
+
+app.get('/alumsearch', async (req, res) => {
+  const { name, alumni, passout, branch } = req.query; // Change from year to passout
+
+  try {
+    let query = {};
+
+    if (name) {
+      query.name = { $regex: new RegExp(name, 'i') };
+    }
+    if (alumni) {
+      query.alumni = alumni === 'true';
+    }
+    if (passout) {
+      query.passout = passout; // Update to passout field
+    }
+    if (branch) {
+      query.branch = branch;
+    }
+
+    const results = await User.find(query);
+    res.json(results);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Error fetching users' });
+  }
+});

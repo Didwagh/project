@@ -14,7 +14,8 @@ const EditProfile = () => {
     bio: '',
     branch: '',
     passoutYear: '',
-    feBeTeSe: ''
+    feBeTeSe: '',
+    alumni: false // New state for alumni status
   });
 
   useEffect(() => {
@@ -51,7 +52,7 @@ const EditProfile = () => {
       const response = await axios.put(`http://localhost:3000/users/${userId}`, user);
       if (response.status === 200) {
         console.log('User info updated successfully');
-        console.log(user)
+        console.log(user);
       }
     } catch (error) {
       console.error('Error updating user info:', error);
@@ -61,8 +62,7 @@ const EditProfile = () => {
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('authToken');
-      router.push("/(authenticate)/login")
-      
+      router.push("/(authenticate)/login");
     } catch (error) {
       console.error('Error logging out:', error);
     }
@@ -122,6 +122,17 @@ const EditProfile = () => {
               {years.map((year, index) => (
                 <Picker.Item key={index} label={year.toString()} value={year.toString()} />
               ))}
+            </Picker>
+          </View>
+          <View style={styles.dropdownContainer}>
+            <Text style={styles.dropdownLabel}>Alumni/Student:</Text>
+            <Picker
+              selectedValue={user.alumni ? 'alumni' : 'student'}
+              style={styles.dropdown}
+              onValueChange={(itemValue, itemIndex) => handleInputChange('alumni', itemValue === 'alumni')}>
+              <Picker.Item label="Select Status" value="" />
+              <Picker.Item label="Alumni" value="alumni" />
+              <Picker.Item label="Student" value="student" />
             </Picker>
           </View>
           <TouchableOpacity style={styles.btn} onPress={handleSave}>
