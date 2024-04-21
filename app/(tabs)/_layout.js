@@ -63,6 +63,21 @@ export default function Layout() {
             ),
         }}
       />
+
+      <Tabs.Screen
+        name="best"
+        options={{
+          tabBarLabel: "",
+          tabBarLabelStyle: { color: "#008E97" },
+          headerShown: false,
+          tabBarIcon: ({ focused }) =>
+            focused ? (
+              <AntDesign name="plussquare" size={24} color="black" />
+            ) : (
+              <AntDesign name="plussquareo" size={24} color="black" />
+            ),
+        }}
+      />
     </Tabs>
   );
 }

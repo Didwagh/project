@@ -643,10 +643,8 @@ app.post("/regteacher", async (req, res) => {
     res.status(500).json({ message: "Registration failed" });
   }
 });
-
-
 app.get('/alumsearch', async (req, res) => {
-  const { name, alumni, passout, branch } = req.query; // Change from year to passout
+  const { name, alumni, passout, branch } = req.query;
 
   try {
     let query = {};
@@ -658,7 +656,7 @@ app.get('/alumsearch', async (req, res) => {
       query.alumni = alumni === 'true';
     }
     if (passout) {
-      query.passout = passout; // Update to passout field
+      query.passoutYear = passout.toString(); // Convert passout to string
     }
     if (branch) {
       query.branch = branch;

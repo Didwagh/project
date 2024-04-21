@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
     },
     alumni: {
         type: Boolean,
+        default:false 
        
     },
     passoutYear: {

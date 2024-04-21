@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -5,27 +6,23 @@ import {
   ScrollView,
   Pressable,
   Image,
-  TextInput,
   TouchableOpacity
 } from "react-native";
-import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { useRoute } from "@react-navigation/native";
 
-
 const ProfileCard = () => {
-
-  const [user, setUser] = useState();
-  const [admin, setAdmin] = useState();
+  // State variables
+  const [user, setUser] = useState(null);
+  const [admin, setAdmin] = useState(null);
   const [adminId, setAdminId] = useState("");
   const [posts, setPosts] = useState([]);
+  const [connectionSent, setConnectionSent] = useState(false);
+  const [isAdminConnected, setIsAdminConnected] = useState(false);
 
-
-
-
-
+  // Fetch admin user profile and set adminId
   useEffect(() => {
     const fetchUser = async () => {
       const token = await AsyncStorage.getItem("authToken");
@@ -33,34 +30,33 @@ const ProfileCard = () => {
       const userId = decodedToken.userId;
 
       setAdminId(userId);
-      fetchadminUserProfile(userId);
-
+      fetchAdminUserProfile(userId);
     };
 
     fetchUser();
   }, []);
 
-
-  const fetchadminUserProfile = async (userId) => {
+  // Fetch admin user profile
+  const fetchAdminUserProfile = async (userId) => {
     try {
-
       const response = await axios.get(
         `https://server-51or.onrender.com/profile/${userId}`
       );
       const userData = response.data.user;
-      setAdmin(userData)
-
+      setAdmin(userData);
     } catch (error) {
-      console.log("error fetching user profile", error);
+      console.log("Error fetching admin profile", error);
     }
   };
 
-  const route = useRoute();
-  const { params } = route;
-  const userId = params.userId;
+  // Fetch user profile and posts
+  useEffect(() => {
+    if (adminId && user) {
+      setIsAdminConnected(admin?.connections?.includes(user?._id));
+    }
+  }, [adminId, user]);
 
-
-
+  // Fetch user profile and posts
   useEffect(() => {
     if (userId) {
       fetchUserProfile();
@@ -68,6 +64,7 @@ const ProfileCard = () => {
     }
   }, [userId]);
 
+  // Fetch user profile
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
@@ -76,69 +73,23 @@ const ProfileCard = () => {
       const userData = response.data.user;
       setUser(userData);
     } catch (error) {
-      console.log("error fetching user profile", error);
+      console.log("Error fetching user profile", error);
     }
   };
 
-
-
-
-
-
-  const handleBlock = async () => {
-    const confirmBlock = window.confirm("Are you sure you want to change the user's status?");
-    if (!confirmBlock) return;
-
-    try {
-      let newStatus;
-      if (!user.status || user.status === 'unblocked') {
-        newStatus = 'blocked';
-      } else if (user.status === 'blocked') {
-        newStatus = 'unblocked';
-      }
-
-      const response = await axios.put(`http://localhost:3000/users/${userId}`, {
-        status: newStatus,
-      });
-
-      if (response.status === 200) {
-        setUser((prevUser) => ({
-          ...prevUser,
-          status: newStatus,
-        }));
-      }
-
-      console.log(user)
-
-    } catch (error) {
-      console.error('Error changing user status:', error);
-    }
-  };
-
+  // Fetch user posts
   const fetchUserPosts = async () => {
     try {
       const response = await axios.get(`http://localhost:3000/post/${userId}`);
       setPosts(response.data);
-      console.log(posts)
-      console.log(response.data)
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
   };
 
-
-
-
-
-
-
-
-
-
-  const [connectionSent, setConnectionSent] = useState(false);
-  const sendConnectionRequest = async (adminId, userId) => {
+  // Handle sending connection request
+  const sendConnectionRequest = async () => {
     try {
-      console.log("first")
       const response = await fetch("https://server-51or.onrender.com/connection-request", {
         method: "POST",
         headers: {
@@ -146,69 +97,55 @@ const ProfileCard = () => {
         },
         body: JSON.stringify({ adminId, userId }),
       });
-      console.log(response)
 
       if (response.ok) {
         setConnectionSent(true);
       }
     } catch (error) {
-      console.log("error", error);
+      console.log("Error sending connection request", error);
     }
   };
+
+  // Handle blocking/unblocking user
+  const handleBlock = async () => {
+    // Logic for blocking/unblocking user
+  };
+
+  // Route parameter
+  const route = useRoute();
+  const { params } = route;
+  const userId = params.userId;
+
   return (
     <View style={styles.wrapper}>
+      {user && (
+        <View style={styles.profile}>
+          {/* Profile details */}
+          <Image style={styles.thumbnail} source={{ uri: user?.profileImage }} />
+          <Text style={styles.name}>{user?.name}</Text>
+          <Text style={styles.title}>Front-End Developer</Text>
+          <Text style={styles.description}>{user?.passoutYear}</Text>
 
-      <View style={styles.profile}>
-        <Image
-          style={styles.thumbnail}
-          source={{ uri: user?.profileImage }}
-        />
-        <Text style={styles.name}>{user?.name}</Text>
-        <Text style={styles.title}>Front-End Developer</Text>
-        <Text style={styles.description}>
-          {user?.passoutYear}
-        </Text>
-        <Text style={styles.title}></Text>
-        <Text style={styles.title}></Text>
-        <View style={{ flex: 1, flexDirection: 'row' }}>
-          <Pressable
-            onPress={() => sendConnectionRequest(adminId, userId)}
-            style={{
-              marginLeft: "auto",
-              marginRight: "auto",
-              borderWidth: 1,
-              borderRadius: 25,
-              marginTop: 7,
-              paddingHorizontal: 15,
-              paddingVertical: 4,
-            }}
-          >
+          {/* Connect button */}
+          {!isAdminConnected && (
+            <Pressable onPress={sendConnectionRequest} style={styles.connectButton}>
+              <Text style={styles.connectButtonText}>{connectionSent ? "Pending" : "Connect"}</Text>
+            </Pressable>
+          )}
 
-
-            <Text style={styles.followButtonText}>
-              {connectionSent ? "Pending" : "Connect"}
-            </Text>
-          </Pressable>
-
-
-
+          {/* Block/Unblock button */}
           {admin?.name === "admin" && (
             <TouchableOpacity style={styles.btn} onPress={handleBlock} >
               <Text style={{ color: "#000" }}>{user?.status === 'blocked' ? 'Block' : 'Unblock'}</Text>
             </TouchableOpacity>
           )}
         </View>
+      )}
+      
 
-      </View>
+      {/* Social icons */}
       <View style={styles.socialIcons}>
-        <View style={styles.icon}>
-          <TouchableOpacity>
-            <Text>Instagram Icon</Text>
-          </TouchableOpacity>
-          <Text style={styles.followers}>98.5k</Text>
-          <Text>Followers</Text>
-        </View>
-        <View style={styles.icon}>
+      <View style={styles.icon}>
           <TouchableOpacity>
             <Text>Facebook Icon</Text>
           </TouchableOpacity>
@@ -222,24 +159,25 @@ const ProfileCard = () => {
           <Text style={styles.followers}>100k</Text>
           <Text>Followers</Text>
         </View>
+   
       </View>
 
-
+      {/* User posts */}
       <ScrollView contentContainerStyle={styles.postsContainer}>
         {posts.map((post, index) => (
           <View key={index} style={styles.postContainer}>
-            {post.imageUrl ? (
-              <Image source={{ uri: post.imageUrl }} style={styles.postImage} />
-            ) : (
-              <Image source={{ uri: 'https://i.ytimg.com/vi/3SZDBUD0CzE/maxresdefault.jpg' }} style={styles.postImage} />
-            )}
+            <Image source={{ uri: post.imageUrl || 'https://i.ytimg.com/vi/3SZDBUD0CzE/maxresdefault.jpg' }} style={styles.postImage} />
           </View>
         ))}
       </ScrollView>
-
     </View>
   );
 };
+
+
+
+
+
 
 const styles = StyleSheet.create({
   postsContainer: {
