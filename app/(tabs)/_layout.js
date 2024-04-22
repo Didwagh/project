@@ -2,6 +2,9 @@ import { Tabs } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 export default function Layout() {
   return (
@@ -9,7 +12,7 @@ export default function Layout() {
       <Tabs.Screen
         name="home"
         options={{
-          tabBarLabel: "Home",
+          tabBarLabel: "",
           tabBarLabelStyle: { color: "#008E97" },
           headerShown: false,
           tabBarIcon: ({ focused }) =>
@@ -23,28 +26,28 @@ export default function Layout() {
       <Tabs.Screen
         name="network"
         options={{
-          tabBarLabel: "network",
+          tabBarLabel: "",
           tabBarLabelStyle: { color: "#008E97" },
           headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <Ionicons name="people" size={24} color="black" />
+              <FontAwesome name="connectdevelop" size={24} color="black" />
             ) : (
-              <Ionicons name="people-outline" size={24} color="black" />
+              <FontAwesome name="connectdevelop" size={24} color="black" />
             ),
         }}
       />
       <Tabs.Screen
         name="post"
         options={{
-          tabBarLabel: "Post",
+          tabBarLabel: "",
           tabBarLabelStyle: { color: "#008E97" },
           headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <AntDesign name="plussquare" size={24} color="black" />
+              <MaterialIcons name="post-add" size={24} color="black" />
             ) : (
-              <AntDesign name="plussquareo" size={24} color="black" />
+              <MaterialIcons name="post-add" size={24} color="black" />
             ),
         }}
       />
@@ -52,14 +55,14 @@ export default function Layout() {
       <Tabs.Screen
         name="chat"
         options={{
-          tabBarLabel: "chat",
+          tabBarLabel: "",
           tabBarLabelStyle: { color: "#008E97" },
           headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <AntDesign name="plussquare" size={24} color="black" />
+              <Entypo name="chat" size={24} color="black" />
             ) : (
-              <AntDesign name="plussquareo" size={24} color="black" />
+              <Entypo name="chat" size={24} color="black" />
             ),
         }}
       />
@@ -72,9 +75,9 @@ export default function Layout() {
           headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <AntDesign name="plussquare" size={24} color="black" />
+              <Feather name="award" size={24} color="black" />
             ) : (
-              <AntDesign name="plussquareo" size={24} color="black" />
+              <Feather name="award" size={24} color="black" />
             ),
         }}
       />
