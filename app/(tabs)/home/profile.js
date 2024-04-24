@@ -103,12 +103,12 @@ const ProfileCard = () => {
 
         <View style={styles.branchYearContainer}>
           <Text style={styles.branchYear}>
-            Branch: {user?.branch}
+            {user?.branch}
           </Text>
         </View>
         <View style={styles.branchYearContainer}>
           <Text style={styles.branchYear}>
-            Year: {user?.year}
+            {user?.year}
           </Text>
         </View>
         <View style={styles.branchYearContainer}>
@@ -157,8 +157,8 @@ const ProfileCard = () => {
 
             <Text>{post.title}</Text>
             <Image
-              style={{ width: 100, height: 100 }} // Adjust dimensions as needed
               source={{ uri: post.imageUrl }}
+              style={{ width: 100, height: 100 }} // Adjust dimensions as needed
             />
 
           </View>

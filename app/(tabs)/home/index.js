@@ -189,7 +189,7 @@ const Index = () => {
           />
           <TextInput placeholder="Search" />
         </Pressable>
-        <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
+        {/* <Ionicons name="chatbox-ellipses-outline" size={24} color="black" /> */}
       </View>
 
       <View>
