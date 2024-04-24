@@ -76,7 +76,7 @@ const ProfileCard = () => {
   const fetchUserPosts = async () => {
     try {
       console.log(userId);
-      const response = await axios.get(`http://localhost:3000/post/${userId}`);
+      const response = await axios.get(`https://sidesever-1.onrender.com/post/${userId}`);
       const postData = response.data;
 
       setPosts(postData);
@@ -103,7 +103,12 @@ const ProfileCard = () => {
 
         <View style={styles.branchYearContainer}>
           <Text style={styles.branchYear}>
-            Branch: {user?.branch}, Year: {user?.year}
+            Branch: {user?.branch}
+          </Text>
+        </View>
+        <View style={styles.branchYearContainer}>
+          <Text style={styles.branchYear}>
+            Year: {user?.year}
           </Text>
         </View>
         <View style={styles.branchYearContainer}>

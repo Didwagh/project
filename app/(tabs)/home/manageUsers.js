@@ -9,7 +9,7 @@ const SearchUser = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/search?query=${searchQuery}`);
+      const response = await axios.get(`https://sidesever-1.onrender.com/search?query=${searchQuery}`);
       setSearchResult(response.data);
       setError('');
     } catch (error) {

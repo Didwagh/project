@@ -24,7 +24,7 @@ const EditProfile = () => {
         const decodedToken = jwtDecode(token);
         const userId = decodedToken.userId;
         console.log(userId)
-        const response = await axios.get(`http://localhost:3000/profile/${userId}`);
+        const response = await axios.get(`https://sidesever-1.onrender.com/profile/${userId}`);
         setUser(response.data.user);
 
       } catch (error) {
@@ -44,7 +44,7 @@ const EditProfile = () => {
 
   const handleSave = async () => {
     try {
-      const response = await axios.put(`http://localhost:3000/profile/${user._id}`, user);
+      const response = await axios.put(`https://sidesever-1.onrender.com/profile/${user._id}`, user);
       if (response.status === 200) {
         console.log('User info updated successfully');
         console.log(user);

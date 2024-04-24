@@ -24,7 +24,7 @@ const Register = () => {
       verified: true,
     };
 
-    axios.post("http://localhost:3000/regteacher", user)
+    axios.post("https://sidesever-1.onrender.com/regteacher", user)
       .then((response) => {
         console.log(response);
         Alert.alert("Registration successful", "You have been registered successfully");

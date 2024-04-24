@@ -136,7 +136,7 @@ const Index = () => {
       if (!confirmDelete) return; // If admin cancels, exit the function
 
       const response = await axios.delete(
-        `http://localhost:3000/posts/${postId}`
+        `https://sidesever-1.onrender.com/posts/${postId}`
       );
       if (response.status === 200) {
         console.log("Post deleted successfully");
