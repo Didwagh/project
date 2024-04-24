@@ -9,6 +9,7 @@ export default function Layout (){
             <Stack.Screen name="Search"  options={{headerShown: false}} />
             <Stack.Screen name="editProfile"  options={{title: "UpdateProfile"}} />
             <Stack.Screen name="otherProfile"  options={{headerShown: false}} />
+            <Stack.Screen name="bannedUser"  options={{title: "Banned User"}} />
         </Stack>
     )
    

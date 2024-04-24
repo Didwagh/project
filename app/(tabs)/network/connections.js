@@ -8,7 +8,6 @@ import axios from "axios";
 import moment from "moment";
 import { useRouter } from "expo-router";
 
-
 const connection = () => {
   const router = useRouter();
 
@@ -53,13 +52,8 @@ const connection = () => {
         receiverId: item?._id,
         senderId: userId,
       },
-    })
-
-  }
-
-
-
-
+    });
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
@@ -70,9 +64,7 @@ const connection = () => {
           justifyContent: "space-between",
           marginHorizontal: 12,
           marginTop: 10,
-        }}
-      >
-
+        }}>
         {/* connection.length to  know the no of element in array */}
         <Text style={{ fontWeight: "500" }}>
           {connections?.length} Connections
@@ -94,7 +86,14 @@ const connection = () => {
 
       <View style={{ marginHorizontal: 10, marginTop: 10 }}>
         {connections?.map((item, index) => (
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 10, marginVertical: 10 }} key={index}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 10,
+              marginVertical: 10,
+            }}
+            key={index}>
             <Image
               style={{ width: 48, height: 48, borderRadius: 24 }}
               source={{ uri: item?.profileImage }}
@@ -115,22 +114,22 @@ const connection = () => {
             </View>
 
             <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-            >
-              <Entypo name="dots-three-vertical" size={20} color="black" />
-              <Pressable onPress={() => { handleNavigation(item) }
-              }>
-
-                <Feather name="send" size={20} color="black" />
+              style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+              {/* <Entypo name="dots-three-vertical" size={20} color="black" /> */}
+              <Pressable
+                onPress={() => {
+                  handleNavigation(item);
+                }}>
+                <AntDesign name="message1" size={24} color="gray" />
               </Pressable>
             </View>
           </View>
         ))}
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default connection
+export default connection;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

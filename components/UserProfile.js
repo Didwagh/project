@@ -60,7 +60,7 @@ import {
             {item?.name}
           </Text>
           <Text style={{ textAlign: "center", marginLeft: 1, marginTop: 2 }}>
-            Engineer Graduate  
+            Professor at ACE 
           </Text>
         </View>
   
@@ -71,7 +71,7 @@ import {
             marginRight: "auto",
             borderColor:
               connectionSent || item?.connectionRequests?.includes(userId)
-                ? "gray"
+                ? "black"
                 : "#0072b1",
             borderWidth: 1,
             borderRadius: 25,
@@ -85,7 +85,7 @@ import {
               fontWeight: "600",
               color:
                 connectionSent || item?.connectionRequests?.includes(userId)
-                  ? "gray"
+                  ? "black"
                   : "#0072b1",
             }}
           >

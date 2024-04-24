@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { 
-  StyleSheet, 
-  Text, 
-  View, 
-  SafeAreaView, 
-  TextInput, 
-  Pressable, 
-  KeyboardAvoidingView, 
-  Alert 
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  TextInput,
+  Pressable,
+  KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import axios from "axios";
 
@@ -24,23 +24,31 @@ const Register = () => {
       verified: true,
     };
 
-    axios.post("https://sidesever-1.onrender.com/regteacher", user)
+    axios
+      .post("https://sidesever-1.onrender.com/regteacher", user)
       .then((response) => {
         console.log(response);
-        Alert.alert("Registration successful", "You have been registered successfully");
+        Alert.alert(
+          "Registration successful",
+          "You have been registered successfully"
+        );
         // Handle navigation logic after successful registration
         setEmail("");
         setPassword("");
         // Reset other form fields if needed
       })
       .catch((error) => {
-        Alert.alert("Registration failed", "An error occurred while registering");
+        Alert.alert(
+          "Registration failed",
+          "An error occurred while registering"
+        );
         console.log("Registration failed", error);
       });
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}>
       <KeyboardAvoidingView>
         <View style={{ marginTop: 50 }}>
           <View style={styles.inputContainer}>
@@ -48,7 +56,7 @@ const Register = () => {
               value={email}
               onChangeText={(text) => setEmail(text)}
               style={styles.input}
-              placeholder="Enter your Email"
+              placeholder="Enter Email"
             />
           </View>
           <View style={styles.inputContainer}>
@@ -57,16 +65,13 @@ const Register = () => {
               onChangeText={(text) => setPassword(text)}
               secureTextEntry={true}
               style={styles.input}
-              placeholder="Enter your Password"
+              placeholder="Enter Password"
             />
           </View>
           {/* Other input fields can be added similarly */}
 
-          <Pressable
-            onPress={handleRegister}
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>Register</Text>
+          <Pressable onPress={handleRegister} style={styles.button}>
+            <Text style={styles.buttonText}>Add Teacher</Text>
           </Pressable>
         </View>
       </KeyboardAvoidingView>
@@ -92,15 +97,16 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 200,
-    backgroundColor: "#0072b1",
+    backgroundColor: "lightblue",
     borderRadius: 6,
-    alignSelf: "center",
-    marginVertical: 20,
+    marginLeft: "auto",
+    marginRight: "auto",
     padding: 15,
+    marginTop: 30,
   },
   buttonText: {
     textAlign: "center",
-    color: "white",
+    color: "black",
     fontSize: 16,
     fontWeight: "bold",
   },

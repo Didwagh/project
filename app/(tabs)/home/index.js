@@ -227,8 +227,8 @@ const Index = () => {
                       color: "gray",
                       fontSize: 15,
                       fontWeight: "400",
-                    }}>
-                    Engineer Graduate | LinkedIn Member
+                    }}>{user?.bio}
+                    
                   </Text>
                   <Text style={{ color: "gray" }}>
                     {moment(item.createdAt).format("MMMM Do YYYY")}

@@ -1,4 +1,3 @@
-
 import {
   StyleSheet,
   Text,
@@ -13,7 +12,7 @@ import React, { useState, useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { firebase } from "../../../firebase";
@@ -118,9 +117,8 @@ const index = () => {
           alignItems: "center",
           justifyContent: "space-around",
           marginVertical: 12,
-        }}
-      >
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+        }}>
+        {/* <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
           <Entypo name="circle-with-cross" size={24} color="black" />
           <View style={{ flexDirection: "row", alignItems: "center", gap: 7 }}>
             <Image
@@ -131,7 +129,7 @@ const index = () => {
             />
             <Text style={{ fontWeight: "500" }}>Anyone</Text>
           </View>
-        </View>
+        </View> */}
 
         <View
           style={{
@@ -139,25 +137,22 @@ const index = () => {
             alignItems: "center",
             gap: 10,
             marginRight: 8,
-          }}
-        >
-          <Entypo name="back-in-time" size={24} color="black" />
+          }}>
+          {/* <Entypo name="back-in-time" size={24} color="black" /> */}
           <Pressable
             onPress={createPost}
             style={{
               padding: 10,
-              backgroundColor: "#0072b1",
+              backgroundColor: "lightblue",
               borderRadius: 20,
               width: 80,
-            }}
-          >
+            }}>
             <Text
               style={{
                 textAlign: "center",
                 color: "white",
                 fontWeight: "bold",
-              }}
-            >
+              }}>
               Post
             </Text>
           </Pressable>
@@ -174,6 +169,10 @@ const index = () => {
           fontSize: 15,
           fontWeight: "500",
           marginTop: 10,
+          borderWidth: 1,
+          borderColor: "lightblue",
+          padding: 10,
+          height: 150,
         }}
         multiline={true}
         numberOfLines={10}
@@ -194,8 +193,7 @@ const index = () => {
           flexDirection: "coloumn",
           marginRight: "auto",
           marginLeft: "auto",
-        }}
-      >
+        }}>
         <Pressable
           onPress={pickImage}
           style={{
@@ -206,8 +204,7 @@ const index = () => {
             borderRadius: 20,
             justifyContent: "center",
             alignItems: "center",
-          }}
-        >
+          }}>
           <MaterialIcons name="perm-media" size={24} color="black" />
         </Pressable>
 
@@ -219,4 +216,4 @@ const index = () => {
 
 export default index;
 
-const styles = StyleSheet.create({}); 
+const styles = StyleSheet.create({});
