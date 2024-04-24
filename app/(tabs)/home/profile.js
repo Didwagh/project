@@ -106,11 +106,11 @@ const ProfileCard = () => {
             {user?.branch}
           </Text>
         </View>
-        <View style={styles.branchYearContainer}>
+        {/* <View style={styles.branchYearContainer}>
           <Text style={styles.branchYear}>
-            {user?.year}
+          {user ? (user.year || user.passoutYear): null}
           </Text>
-        </View>
+        </View> */}
         <View style={styles.branchYearContainer}>
           <Text style={styles.branchYear}>
             Total Connections : {user?.connections.length}
