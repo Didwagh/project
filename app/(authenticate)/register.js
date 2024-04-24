@@ -24,7 +24,7 @@ const register = () => {
   const [image, setImage] = useState("");
   const router = useRouter();
   const handleRegister = () => {
-      console.log("hello")
+      
       const user = {
         name,
         email,
@@ -42,12 +42,12 @@ const register = () => {
         posts: [], // Add this line for the posts field
       };
       
-
+      console.log(user)
       axios.post("https://server-51or.onrender.com/register",user).then((response) => {
           console.log(response);
           // Alert.alert("Registration successful","You have been registered successfully");
           setName("");
-          router.replace("/login")
+          
           setEmail("");
           setPassword("");
           setImage("");
@@ -55,6 +55,7 @@ const register = () => {
           Alert.alert("Registration failed","An error occurred while registering");
           console.log("registration failed",error)
       });
+      setTimeout(()=>{router.navigate("login")},4000)
   }
   return (
     <SafeAreaView

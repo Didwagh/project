@@ -27,7 +27,7 @@ const ProfileCard = () => {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.userId;
       setUserId(userId);
-      console.log(userId)
+      console.log(userId);
     };
 
     fetchUser();
@@ -52,6 +52,15 @@ const ProfileCard = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('authToken');
+      router.replace("/login"); // Assuming the authentication stack is named '(authenticate)'
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
   const handleEditProfile = () => {
     router.push("/home/editProfile");
   };
@@ -68,22 +77,21 @@ const ProfileCard = () => {
     try {
       console.log(userId);
       const response = await axios.get(`http://localhost:3000/post/${userId}`);
-      const postData = response.data; 
-      
+      const postData = response.data;
+
       setPosts(postData);
-      console.log(post)
-  
+      console.log(post);
     } catch (error) {
-      console.error('Error fetching posts:', error);
+      console.error("Error fetching posts:", error);
     }
   };
-  
 
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleEditProfile} style={styles.editButton}>
         <Text>Edit Profile</Text>
       </TouchableOpacity>
+      
       <View style={styles.profile}>
         <Image
           style={styles.thumbnail}
@@ -122,21 +130,22 @@ const ProfileCard = () => {
         </View>
       </View> */}
 
-      <View style={styles.feed}>
-       
-      </View>
+      <View style={styles.feed}></View>
 
-      {user?.name === "admin" && (
+      {user?.email === "admin" && (
         <TouchableOpacity onPress={handleAddTeacher} style={styles.addButton}>
           <Text style={styles.buttonText}>Add Teacher</Text>
         </TouchableOpacity>
       )}
 
-      {user?.name === "admin" && (
+      {user?.email === "admin" && (
         <TouchableOpacity onPress={handleBlockUser} style={styles.blockButton}>
           <Text style={styles.buttonText}>Block User</Text>
         </TouchableOpacity>
       )}
+      <TouchableOpacity onPress={handleLogout} style={styles.blockButton}>
+        <Text style={styles.buttonText}>Logout</Text>
+      </TouchableOpacity>
       <ScrollView contentContainerStyle={styles.postsContainer}>
         {posts.map((post, index) => (
           <View key={index} style={styles.postContainer}>
@@ -208,6 +217,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
+    marginBottom: 10
   },
   buttonText: {
     color: "#6452E9",
