@@ -91,7 +91,7 @@ const ProfileCard = () => {
       <TouchableOpacity onPress={handleEditProfile} style={styles.editButton}>
         <Text>Edit Profile</Text>
       </TouchableOpacity>
-      
+
       <View style={styles.profile}>
         <Image
           style={styles.thumbnail}
@@ -146,20 +146,19 @@ const ProfileCard = () => {
       <TouchableOpacity onPress={handleLogout} style={styles.blockButton}>
         <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity>
-      <ScrollView contentContainerStyle={styles.postsContainer}>
+      <View style={styles.feed}>
         {posts.map((post, index) => (
           <View key={index} style={styles.postContainer}>
+
+            <Text>{post.title}</Text>
             <Image
-              source={{
-                uri: post?.imageUrl
-                  ? post.imageUrl
-                  : "https://i.ytimg.com/vi/3SZDBUD0CzE/maxresdefault.jpg",
-              }}
-              style={styles.postImage}
+              style={{ width: 100, height: 100 }} // Adjust dimensions as needed
+              source={{ uri: post.imageUrl }}
             />
+
           </View>
         ))}
-      </ScrollView>
+      </View>
     </View>
   );
 };
