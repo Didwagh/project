@@ -187,7 +187,7 @@ const register = () => {
               />
             </View>
 
-          <View
+          {/* <View
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -210,7 +210,7 @@ const register = () => {
               }}
               placeholder="enter your image url"
             />
-          </View>
+          </View> */}
 
         
 
@@ -235,7 +235,7 @@ const register = () => {
          onPress={handleRegister}
             style={{
               width: 200,
-              backgroundColor: "#0072b1",
+              backgroundColor: "lightblue",
               borderRadius: 6,
               marginLeft: "auto",
               marginRight: "auto",
@@ -245,7 +245,7 @@ const register = () => {
             <Text
               style={{
                 textAlign: "center",
-                color: "white",
+                color: "black",
                 fontSize: 16,
                 fontWeight: "bold",
               }}

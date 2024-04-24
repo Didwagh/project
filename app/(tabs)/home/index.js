@@ -153,9 +153,11 @@ const Index = () => {
   const router = useRouter();
 
   return (
-    <ScrollView>
+    <ScrollView stickyHeaderIndices={[0]}>
+
       <View
         style={{
+          backgroundColor:"lightblue",
           padding: 10,
           flexDirection: "row",
           alignItems: "center",
@@ -163,7 +165,7 @@ const Index = () => {
         }}>
         <Pressable onPress={() => router.push("/home/profile")}>
           <Image
-            style={{ width: 30, height: 30, borderRadius: 15 }}
+            style={{ width: 30, height: 30, borderRadius: 15, backgroundColor:"gray" }}
             source={{ uri: user?.profileImage }}
           />
         </Pressable>
