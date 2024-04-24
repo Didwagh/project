@@ -94,19 +94,6 @@ const EditProfile = () => {
             </Picker>
           </View>
           <View style={styles.dropdownContainer}>
-            <Text style={styles.dropdownLabel}>Select Year</Text>
-            <Picker
-              selectedValue={user.year}
-              style={[styles.dropdown, styles.slimPicker]}
-              onValueChange={(itemValue, itemIndex) => handleInputChange('year', itemValue)}>
-              <Picker.Item label="Select Year" value="" />
-              <Picker.Item label="FE" value="FE" />
-              <Picker.Item label="BE" value="BE" />
-              <Picker.Item label="TE" value="TE" />
-              <Picker.Item label="SE" value="SE" />
-            </Picker>
-          </View>
-          <View style={styles.dropdownContainer}>
             <Text style={styles.dropdownLabel}>Alumni/Student:</Text>
             <Picker
               selectedValue={user.alumni ? 'alumni' : 'student'}
@@ -131,6 +118,21 @@ const EditProfile = () => {
               </Picker>
             </View>
           )}
+          {!user.alumni && (
+            <View style={styles.dropdownContainer}>
+              <Text style={styles.dropdownLabel}>Select Year</Text>
+              <Picker
+                selectedValue={user.year}
+                style={[styles.dropdown, styles.slimPicker]}
+                onValueChange={(itemValue, itemIndex) => handleInputChange('year', itemValue)}>
+                <Picker.Item label="Select Year" value="" />
+                <Picker.Item label="FE" value="FE" />
+                <Picker.Item label="BE" value="BE" />
+                <Picker.Item label="TE" value="TE" />
+                <Picker.Item label="SE" value="SE" />
+              </Picker>
+            </View>
+          )}
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.btn} onPress={handleSave}>
               <Text style={{ color: '#fff' }}>Save</Text>
@@ -145,7 +147,7 @@ const EditProfile = () => {
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: '#f5f5f5',
@@ -197,6 +199,6 @@ const styles = {
     borderRadius: 5,
     textAlign: 'center',
   },
-};
+});
 
 export default EditProfile;
