@@ -61,12 +61,22 @@ const register = () => {
       style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
     >
       <View>
-        <Image
+        {/* <Image
           style={{ width: 150, height: 100, resizeMode: "contain" }}
           source={{
             uri: "https://www.freepnglogos.com/uploads/linkedin-logo-transparent-png-25.png",
           }}
-        />
+        /> */}
+        <Text
+            style={{
+              fontSize: 50,
+              fontWeight: "bold",
+              marginTop: 120,
+              color: "#041E42",
+            }}
+          >
+            Alum-Connect
+          </Text>
       </View>
 
       <KeyboardAvoidingView>
@@ -211,11 +221,11 @@ const register = () => {
               justifyContent: "space-between",
             }}
           >
-            <Text>Keep me logged in</Text>
+              {/* <Text>Keep me logged in</Text>
 
-            <Text style={{ color: "#007FFF", fontWeight: "500" }}>
-              Forgot Password
-            </Text>
+              <Text style={{ color: "#007FFF", fontWeight: "500" }}>
+                Forgot Password
+              </Text> */}
           </View>
 
           <View style={{ marginTop: 80 }} />

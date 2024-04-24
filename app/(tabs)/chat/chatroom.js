@@ -155,12 +155,12 @@ const chatroom = () => {
           marginBottom: 1,
         }}
       >
-        <Entypo
+        {/* <Entypo
           style={{ marginRight: 7 }}
           name="emoji-happy"
           size={24}
           color="gray"
-        />
+        /> */}
         <TextInput
           value={message}
           onChangeText={(text) => setMessage(text)}
@@ -183,9 +183,9 @@ const chatroom = () => {
             marginHorizontal: 8,
           }}
         >
-          <Entypo name="camera" size={24} color="gray" />
+          {/* <Entypo name="camera" size={24} color="gray" />
 
-          <Feather name="mic" size={24} color="gray" />
+          <Feather name="mic" size={24} color="gray" /> */}
         </View>
 
         <Pressable

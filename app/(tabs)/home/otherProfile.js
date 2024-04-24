@@ -6,7 +6,7 @@ import {
   ScrollView,
   Pressable,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
@@ -83,20 +83,23 @@ const ProfileCard = () => {
       const response = await axios.get(`http://localhost:3000/post/${userId}`);
       setPosts(response.data);
     } catch (error) {
-      console.error('Error fetching posts:', error);
+      console.error("Error fetching posts:", error);
     }
   };
 
   // Handle sending connection request
   const sendConnectionRequest = async () => {
     try {
-      const response = await fetch("https://server-51or.onrender.com/connection-request", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ adminId, userId }),
-      });
+      const response = await fetch(
+        "https://server-51or.onrender.com/connection-request",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ adminId, userId }),
+        }
+      );
 
       if (response.ok) {
         setConnectionSent(true);
@@ -121,63 +124,70 @@ const ProfileCard = () => {
       {user && (
         <View style={styles.profile}>
           {/* Profile details */}
-          <Image style={styles.thumbnail} source={{ uri: user?.profileImage }} />
+          <Image
+            style={styles.thumbnail}
+            source={{ uri: user?.profileImage }}
+          />
           <Text style={styles.name}>{user?.name}</Text>
           <Text style={styles.title}>Front-End Developer</Text>
           <Text style={styles.description}>{user?.passoutYear}</Text>
 
           {/* Connect button */}
           {!isAdminConnected && (
-            <Pressable onPress={sendConnectionRequest} style={styles.connectButton}>
-              <Text style={styles.connectButtonText}>{connectionSent ? "Pending" : "Connect"}</Text>
+            <Pressable
+              onPress={sendConnectionRequest}
+              style={styles.connectButton}>
+              <Text style={styles.connectButtonText}>
+                {connectionSent ? "Pending" : "Connect"}
+              </Text>
             </Pressable>
           )}
 
           {/* Block/Unblock button */}
           {admin?.name === "admin" && (
-            <TouchableOpacity style={styles.btn} onPress={handleBlock} >
-              <Text style={{ color: "#000" }}>{user?.status === 'blocked' ? 'Block' : 'Unblock'}</Text>
+            <TouchableOpacity style={styles.btn} onPress={handleBlock}>
+              <Text style={{ color: "#000" }}>
+                {user?.status === "blocked" ? "Block" : "Unblock"}
+              </Text>
             </TouchableOpacity>
           )}
         </View>
       )}
-      
 
       {/* Social icons */}
-      <View style={styles.socialIcons}>
-      <View style={styles.icon}>
+      {/* <View style={styles.socialIcons}>
+        <View style={styles.icon}>
           <TouchableOpacity>
-            <Text>Facebook Icon</Text>
+            <Text>Followers</Text>
           </TouchableOpacity>
           <Text style={styles.followers}>44.5k</Text>
-          <Text>Followers</Text>
         </View>
         <View style={styles.icon}>
           <TouchableOpacity>
-            <Text>YouTube Icon</Text>
+            <Text>Following</Text>
           </TouchableOpacity>
           <Text style={styles.followers}>100k</Text>
-          <Text>Followers</Text>
         </View>
-   
-      </View>
+      </View> */}
 
       {/* User posts */}
       <ScrollView contentContainerStyle={styles.postsContainer}>
         {posts.map((post, index) => (
           <View key={index} style={styles.postContainer}>
-            <Image source={{ uri: post.imageUrl || 'https://i.ytimg.com/vi/3SZDBUD0CzE/maxresdefault.jpg' }} style={styles.postImage} />
+            <Image
+              source={{
+                uri:
+                  post.imageUrl ||
+                  "https://i.ytimg.com/vi/3SZDBUD0CzE/maxresdefault.jpg",
+              }}
+              style={styles.postImage}
+            />
           </View>
         ))}
       </ScrollView>
     </View>
   );
 };
-
-
-
-
-
 
 const styles = StyleSheet.create({
   postsContainer: {
@@ -199,7 +209,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     flex: 1,
-    margin: 25
+    margin: 25,
   },
   topIcons: {
     flexDirection: "row",

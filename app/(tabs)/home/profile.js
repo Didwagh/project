@@ -10,13 +10,15 @@ import {
   ScrollView,
   Pressable,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 
 const ProfileCard = () => {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState();
   const [posts, setPosts] = useState([]);
+  // const [postts, setPostts] = useState([]);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -25,6 +27,7 @@ const ProfileCard = () => {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.userId;
       setUserId(userId);
+      console.log(userId)
     };
 
     fetchUser();
@@ -33,7 +36,7 @@ const ProfileCard = () => {
   useEffect(() => {
     if (userId) {
       fetchUserProfile();
-      fetchUserPosts()
+      fetchUserPosts();
     }
   }, [userId]);
 
@@ -60,15 +63,21 @@ const ProfileCard = () => {
   const handleBlockUser = () => {
     router.push("/home/bannedUser");
   };
+
   const fetchUserPosts = async () => {
     try {
+      console.log(userId);
       const response = await axios.get(`http://localhost:3000/post/${userId}`);
-      setPosts(response.data);
-      console.log(posts)
+      const postData = response.data; 
+      
+      setPosts(postData);
+      console.log(post)
+  
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
   };
+  
 
   return (
     <View style={styles.container}>
@@ -76,29 +85,69 @@ const ProfileCard = () => {
         <Text>Edit Profile</Text>
       </TouchableOpacity>
       <View style={styles.profile}>
-        <Image style={styles.thumbnail} resizeMode="contain" source={{ uri: user?.profileImage }} />
+        <Image
+          style={styles.thumbnail}
+          resizeMode="contain"
+          source={{ uri: user?.profileImage }}
+        />
         <Text style={styles.name}>{user?.name}</Text>
         <Text style={styles.bio}>{user?.bio}</Text>
+
         <View style={styles.branchYearContainer}>
-          <Text style={styles.branchYear}>Branch: {user?.branch}, Year: {user?.year}</Text>
+          <Text style={styles.branchYear}>
+            Branch: {user?.branch}, Year: {user?.year}
+          </Text>
+        </View>
+        <View style={styles.branchYearContainer}>
+          <Text style={styles.branchYear}>
+            Total Connections : {user?.connections.length}
+          </Text>
         </View>
       </View>
-      <TouchableOpacity onPress={handleAddTeacher} style={styles.addButton}>
-        <Text style={styles.buttonText}>Add Teacher</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleBlockUser} style={styles.blockButton}>
-        <Text style={styles.buttonText}>Block User</Text>
-      </TouchableOpacity>
 
+      {/* <View style={styles.socialIcons}>
+        <View style={styles.icon}>
+          <TouchableOpacity>
+          <Text>Followers</Text>
+          </TouchableOpacity>
+          <Text style={styles.followers}>44.5k</Text>
+          
+        </View>
+        <View style={styles.icon}>
+          <TouchableOpacity>
+          <Text>Following</Text>
+          </TouchableOpacity>
+          <Text style={styles.followers}>100k</Text>
+          
+        </View>
+      </View> */}
+
+      <View style={styles.feed}>
+       
+      </View>
+
+      {user?.name === "admin" && (
+        <TouchableOpacity onPress={handleAddTeacher} style={styles.addButton}>
+          <Text style={styles.buttonText}>Add Teacher</Text>
+        </TouchableOpacity>
+      )}
+
+      {user?.name === "admin" && (
+        <TouchableOpacity onPress={handleBlockUser} style={styles.blockButton}>
+          <Text style={styles.buttonText}>Block User</Text>
+        </TouchableOpacity>
+      )}
       <ScrollView contentContainerStyle={styles.postsContainer}>
-        {posts.map((post) => (
-          <View key={post._id} style={styles.postContainer}>
-        
-            {post.imageUrl ? (
-              <Image source={{ uri: post.imageUrl }} style={styles.postImage} />
-            ) : (
-              <Text>No Image Available</Text>
-            )}
+        {posts.map((post, index) => (
+          <View key={index} style={styles.postContainer}>
+            <Image
+              source={{
+                uri: post?.imageUrl
+                  ? post.imageUrl
+                  : "https://i.ytimg.com/vi/3SZDBUD0CzE/maxresdefault.jpg",
+              }}
+              style={styles.postImage}
+            />
           </View>
         ))}
       </ScrollView>
@@ -162,6 +211,23 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#6452E9",
+  },
+  socialIcons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  icon: {
+    paddingHorizontal: 50,
+    alignItems: "center",
+  },
+  followers: {
+    marginTop: 10,
+    marginBottom: 5,
+    fontWeight: "bold",
+  },
+  postContainer: {
+    width: "30%", // Adjust the width based on the requirement to have 3 posts per row
+    marginBottom: 10,
   },
 });
 

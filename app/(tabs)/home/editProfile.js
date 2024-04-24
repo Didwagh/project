@@ -145,50 +145,58 @@ const EditProfile = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = {
   wrapper: {
     flex: 1,
-    margin: 25
+    backgroundColor: '#f5f5f5',
+    padding: 20,
   },
   profile: {
-    alignItems: 'flex-start',
-    marginBottom: 20
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
   },
   input: {
-    width: '100%',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#ddd',
     borderRadius: 5,
     padding: 10,
-    marginBottom: 15
-  },
-  btn: {
-    backgroundColor: '#6452E9',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 70,
-    elevation: 3,
-    marginBottom: 10
+    marginBottom: 15,
+    width: '100%',
   },
   dropdownContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 15
+    marginBottom: 15,
   },
   dropdownLabel: {
-    marginRight: 10
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
   dropdown: {
-    height: 50,
-    width: 150
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 5,
+    padding: 5,
+    width: '100%',
   },
   slimPicker: {
-    width: 120
+    height: 40,
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'center'
-  }
-});
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  btn: {
+    backgroundColor: '#4CAF50',
+    color: '#fff',
+    padding: 10,
+    borderRadius: 5,
+    textAlign: 'center',
+  },
+};
 
 export default EditProfile;

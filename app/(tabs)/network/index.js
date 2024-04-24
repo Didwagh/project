@@ -123,7 +123,7 @@ const index = () => {
         }}
       >
         <Text style={{ fontSize: 16, fontWeight: "600" }}>
-          Manage My Network
+          My Connections
         </Text>
         <AntDesign name="arrowright" size={22} color="black" />
       </Pressable>
@@ -141,7 +141,7 @@ const index = () => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: "600" }}>Invitations (0)</Text>
+        <Text style={{ fontSize: 16, fontWeight: "600" }}>Connection Requests (0)</Text>
         <AntDesign name="arrowright" size={22} color="black" />
       </View>
 
