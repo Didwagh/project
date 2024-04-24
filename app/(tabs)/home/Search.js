@@ -13,7 +13,7 @@ const SearchUser = () => {
   useEffect(() => {
     const handleSearch = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/search?name=${searchName}`);
+        const response = await axios.get(`https://sidesever-1.onrender.com/search?name=${searchName}`);
         const userData = response.data;
         setSearchResults(userData);
         setError('');

@@ -186,7 +186,7 @@ const login = () => {
             onPress={handleLogin}
             style={{
               width: 200,
-              backgroundColor: "#0072b1",
+              backgroundColor: "lightblue",
               borderRadius: 6,
               marginLeft: "auto",
               marginRight: "auto",
@@ -196,7 +196,7 @@ const login = () => {
             <Text
               style={{
                 textAlign: "center",
-                color: "white",
+                color: "black",
                 fontSize: 16,
                 fontWeight: "bold",
               }}

@@ -22,7 +22,7 @@ const SearchUser = () => {
         queryParams += `&passout=${passoutYear}&branch=${branch}`;
       }
       console.log("Query Params:", queryParams); // Check the constructed query params
-      const response = await axios.get(`http://localhost:3000/alumsearch?${queryParams}`);
+      const response = await axios.get(`https://sidesever-1.onrender.com/alumsearch?${queryParams}`);
       const userData = response.data;
       setSearchResults(userData);
       setError('');

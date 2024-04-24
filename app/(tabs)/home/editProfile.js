@@ -24,7 +24,7 @@ const EditProfile = () => {
         const decodedToken = jwtDecode(token);
         const userId = decodedToken.userId;
         console.log(userId)
-        const response = await axios.get(`http://localhost:3000/profile/${userId}`);
+        const response = await axios.get(`https://sidesever-1.onrender.com/profile/${userId}`);
         setUser(response.data.user);
 
       } catch (error) {
@@ -44,7 +44,7 @@ const EditProfile = () => {
 
   const handleSave = async () => {
     try {
-      const response = await axios.put(`http://localhost:3000/profile/${user._id}`, user);
+      const response = await axios.put(`https://sidesever-1.onrender.com/profile/${user._id}`, user);
       if (response.status === 200) {
         console.log('User info updated successfully');
         console.log(user);
@@ -54,17 +54,10 @@ const EditProfile = () => {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await AsyncStorage.removeItem('authToken');
-      navigation.navigate('(authenticate)'); // Assuming the authentication stack is named '(authenticate)'
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  };
+  
 
   const currentYear = new Date().getFullYear();
-  const years = Array.from(new Array(currentYear - 1900), (val, index) => 1901 + index);
+  const years = Array.from(new Array(currentYear - 2000), (val, index) => 2000 + index);
 
   return (
     <ScrollView> 
@@ -135,11 +128,9 @@ const EditProfile = () => {
           )}
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.btn} onPress={handleSave}>
-              <Text style={{ color: '#fff' }}>Save</Text>
+              <Text>Save</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btn} onPress={handleLogout}>
-              <Text style={{ color: '#fff' }}>Logout</Text>
-            </TouchableOpacity>
+            
           </View>
         </View>
       </View>
@@ -193,7 +184,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   btn: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: 'lightblue',
     color: '#fff',
     padding: 10,
     borderRadius: 5,

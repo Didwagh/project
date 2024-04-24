@@ -76,7 +76,7 @@ const ProfileCard = () => {
   const fetchUserPosts = async () => {
     try {
       console.log(userId);
-      const response = await axios.get(`http://localhost:3000/post/${userId}`);
+      const response = await axios.get(`https://sidesever-1.onrender.com/post/${userId}`);
       const postData = response.data;
 
       setPosts(postData);
@@ -103,7 +103,12 @@ const ProfileCard = () => {
 
         <View style={styles.branchYearContainer}>
           <Text style={styles.branchYear}>
-            Branch: {user?.branch}, Year: {user?.year}
+            Branch: {user?.branch}
+          </Text>
+        </View>
+        <View style={styles.branchYearContainer}>
+          <Text style={styles.branchYear}>
+            Year: {user?.year}
           </Text>
         </View>
         <View style={styles.branchYearContainer}>
@@ -134,17 +139,17 @@ const ProfileCard = () => {
 
       {user?.email === "admin" && (
         <TouchableOpacity onPress={handleAddTeacher} style={styles.addButton}>
-          <Text style={styles.buttonText}>Add Teacher</Text>
+          <Text>Add Teacher</Text>
         </TouchableOpacity>
       )}
 
       {user?.email === "admin" && (
         <TouchableOpacity onPress={handleBlockUser} style={styles.blockButton}>
-          <Text style={styles.buttonText}>Block User</Text>
+          <Text>Block User</Text>
         </TouchableOpacity>
       )}
       <TouchableOpacity onPress={handleLogout} style={styles.blockButton}>
-        <Text style={styles.buttonText}>Logout</Text>
+        <Text>Logout</Text>
       </TouchableOpacity>
       <View style={styles.feed}>
         {posts.map((post, index) => (
@@ -171,9 +176,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   editButton: {
+    backgroundColor: "lightblue",
     position: "absolute",
     top: 20,
     right: 20,
+    color: '#fff',
+    padding: 10,
+    borderRadius: 5,
+    textAlign: 'center',
   },
   profile: {
     marginTop: 50,
@@ -185,6 +195,7 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 75,
     marginBottom: 10,
+    backgroundColor:"gray",
   },
   name: {
     fontSize: 24,
@@ -205,22 +216,28 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   addButton: {
-    backgroundColor: "#fff",
+    
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     marginBottom: 10,
+    backgroundColor: 'lightblue',
+    color: '#fff',
+    padding: 10,
+    textAlign: 'center',
   },
   blockButton: {
-    backgroundColor: "#fff",
+    
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    marginBottom: 10
+    marginBottom: 10,
+    backgroundColor: 'lightblue',
+    color: '#fff',
+    padding: 10,
+    textAlign: 'center',
   },
-  buttonText: {
-    color: "#6452E9",
-  },
+
   socialIcons: {
     flexDirection: "row",
     justifyContent: "space-between",

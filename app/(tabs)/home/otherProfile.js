@@ -80,7 +80,7 @@ const ProfileCard = () => {
   // Fetch user posts
   const fetchUserPosts = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/post/${userId}`);
+      const response = await axios.get(`https://sidesever-1.onrender.com/post/${userId}`);
       setPosts(response.data);
     } catch (error) {
       console.error("Error fetching posts:", error);
