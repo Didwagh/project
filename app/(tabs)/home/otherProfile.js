@@ -129,8 +129,8 @@ const ProfileCard = () => {
             source={{ uri: user?.profileImage }}
           />
           <Text style={styles.name}>{user?.name}</Text>
-          <Text style={styles.title}>Front-End Developer</Text>
-          <Text style={styles.description}>{user?.passoutYear}</Text>
+          <Text style={styles.title}>{user?.bio}</Text>
+          <Text style={styles.description}>Passout Year {user?.passoutYear}</Text>
 
           {/* Connect button */}
           {!isAdminConnected && (
@@ -144,7 +144,7 @@ const ProfileCard = () => {
           )}
 
           {/* Block/Unblock button */}
-          {admin?.name === "admin" && (
+          {admin?.email === "admin" && (
             <TouchableOpacity style={styles.btn} onPress={handleBlock}>
               <Text style={{ color: "#000" }}>
                 {user?.status === "blocked" ? "Block" : "Unblock"}

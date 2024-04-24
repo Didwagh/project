@@ -235,7 +235,7 @@ const Index = () => {
               </View>
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-                {user?.name === "admin" && (
+                {user?.email === "admin" && (
                   <Pressable onPress={() => deletePost(item._id)}>
                     <Feather name="x" size={20} color="black" />
                   </Pressable>
