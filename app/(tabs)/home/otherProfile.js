@@ -130,7 +130,7 @@ const ProfileCard = () => {
           />
           <Text style={styles.name}>{user?.name}</Text>
           <Text style={styles.title}>{user?.bio}</Text>
-          <Text style={styles.description}>Passout Year {user?.passoutYear}</Text>
+          {/* <Text style={styles.description}>Passout Year {user?.passoutYear}</Text> */}
 
           {/* Connect button */}
           {!isAdminConnected && (
@@ -267,6 +267,19 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 5,
     fontWeight: "bold",
+  },
+  connectButton: {
+    backgroundColor: 'white',
+    borderColor:"#0072B1",
+    borderWidth: 1,
+    padding: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+  },
+  connectButtonText: {
+    color: '#0072B1',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

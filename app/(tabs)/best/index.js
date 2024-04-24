@@ -112,9 +112,9 @@ const SearchUser = () => {
             >
               <Image source={{ uri: user.profileImage || "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/510px-Default_pfp.svg.png" }} style={{ width: 50, height: 50, borderRadius: 25, marginRight: 10 }} />
               <View>
-                <Text>Name: {user.name}</Text>
-                <Text>year: {user.year}</Text>
-                <Text>branch: {user.branch}</Text>
+                <Text>{user.name}</Text>
+                {/* <Text>year: {user.year}</Text> */}
+                <Text>{user.branch}</Text>
               </View>
             </Pressable>
           ))

@@ -172,7 +172,7 @@ const index = () => {
         }}
       >
         <Text style={{ fontSize: 16, fontWeight: "600" }}>
-          Not Yet Friends
+          More Users
         </Text>
         <AntDesign name="arrowright" size={22} color="black" />
       </Pressable>
