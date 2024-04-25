@@ -60,7 +60,7 @@ import {
             {item?.name}
           </Text>
           <Text style={{ textAlign: "center", marginLeft: 1, marginTop: 2 }}>
-            Professor at ACE 
+            
           </Text>
         </View>
   

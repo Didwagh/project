@@ -141,7 +141,7 @@ const index = () => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: "600" }}>Connection Requests (0)</Text>
+        <Text style={{ fontSize: 16, fontWeight: "600" }}>Connection Requests</Text>
         <AntDesign name="arrowright" size={22} color="black" />
       </View>
 

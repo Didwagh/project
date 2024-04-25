@@ -111,6 +111,22 @@ const ProfileCard = () => {
           {user ? (user.year || user.passoutYear): null}
           </Text>
         </View> */}
+        { 
+          !user?.student &&
+          <View style={styles.branchYearContainer}>
+          <Text style={styles.branchYear}>
+            Year: {user?.year}
+          </Text>
+        </View>
+        }
+        { 
+          user?.alumni &&
+          <View style={styles.branchYearContainer}>
+          <Text style={styles.branchYear}>
+            Passout Year : {user?.passoutYear}
+          </Text>
+        </View>
+        }
         <View style={styles.branchYearContainer}>
           <Text style={styles.branchYear}>
             Total Connections : {user?.connections.length}
