@@ -40,15 +40,6 @@ const login = () => {
   //   checkLoginStatus();
   // }, [])
 
-
-
-
-
-
-
-
-
-
   const handleLogin = () => {
     const user = {
       email: email,

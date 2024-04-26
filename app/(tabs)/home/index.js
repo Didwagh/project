@@ -219,7 +219,7 @@ const Index = () => {
                   <Text style={{ fontSize: 15, fontWeight: "600" }}>
                     {item?.user?.name}
                   </Text>
-                  <Text
+                  {/* <Text
                     numberOfLines={1}
                     ellipsizeMode="tail"
                     style={{
@@ -229,7 +229,7 @@ const Index = () => {
                       fontWeight: "400",
                     }}>{user?.bio}
                     
-                  </Text>
+                  </Text> */}
                   <Text style={{ color: "gray" }}>
                     {moment(item.createdAt).format("MMMM Do YYYY")}
                   </Text>

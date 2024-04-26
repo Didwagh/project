@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const crypto = require("crypto");
 const dotenv = require("dotenv");
 dotenv.config();
-// const nodemailer = require("nodemailer");
+
 
 
 const app = express();
@@ -12,10 +12,7 @@ const port = process.env.NODE_PORT;
 const cors = require("cors");
 app.use(cors());
 const http = require("http").createServer(app);
-// const io = require("socket.io")(http);
 
-
-// If you are using Socket.IO v3, you need to explicitly enable Cross-Origin Resource Sharing (CORS).
 const io = require("socket.io")(http
   , {
   cors: {
@@ -51,18 +48,15 @@ const User = require("./models/user");
 const Post = require("./models/post");
 const Chat = require("./models/message");
 
-//endpoint to register a user in the backend
 app.post("/register", async (req, res) => {
   try {
     const { name, email, password, profileImage } = req.body;
-    //check if the email is already registered
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       console.log("Email already registered");
       return res.status(400).json({ message: "Email already registered" });
     }
 
-    //create a new User
     const newUser = new User({
       name,
       email,
@@ -81,71 +75,17 @@ app.post("/register", async (req, res) => {
 
       
     });
-    //generate the verification token
     newUser.verificationToken = crypto.randomBytes(20).toString("hex");
 
-    //save the user to the database
     await newUser.save();
 
-    //send the verification email to the registered user
-    // sendVerificationEmail(newUser.email, newUser.verificationToken);
-
-    // res.status(202).json({
-    //   message:
-    //     "Registration successful.Please check your mail for verification",
-    // });
   } catch (error) {
     console.log("Error registering user", error);
     res.status(500).json({ message: "Registration failed" });
   }
 });
 
-// const sendVerificationEmail = async (email, verificationToken) => {
-//   const transporter = nodemailer.createTransport({
-//     service: "gmail",
-//     auth: {
-//       user: "sujananand0@gmail.com",
-//       pass: "rnzcugnscqtqiefs",
-//     },
-//   });
 
-  // const mailOptions = {
-  //   from: "linkedin@gmail.com",
-  //   to: email,
-  //   subject: "Email Verification",
-  //   text: `please click the following link to verify your email : http://localhost:3000/verify/${verificationToken}`,
-  // };
-
-  //send the mail
-//   try {
-//     await transporter.sendMail(mailOptions);
-//     console.log("Verification email sent successfully");
-//   } catch (error) {
-//     console.log("Error sending the verification email");
-//   }
-// };
-
-//endpoint to verify email
-// app.get("/verify/:token", async (req, res) => {
-//   try {
-//     const token = req.params.token;
-
-//     const user = await User.findOne({ verificationToken: token });
-//     if (!user) {
-//       return res.status(404).json({ message: "Invalid verification token" });
-//     }
-
-//     //mark the user as verified
-//     user.verified = true;
-//     user.verificationToken = undefined;
-
-//     await user.save();
-
-//     res.status(200).json({ message: "Email verified successfully" });
-//   } catch (error) {
-//     res.status(500).json({ message: "Email verification failed" });
-//   }
-// });
 
 const generateSecretKey = () => {
   const secretKey = crypto.randomBytes(32).toString("hex");
@@ -155,19 +95,16 @@ const generateSecretKey = () => {
 
 const secretKey = generateSecretKey();
 
-//endpoint to login a user.
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
     console.log(req.body)
-    //check if user exists already
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    //check if password is correct
     if (user.password !== password) {
       return res.status(401).json({ message: "Invalid password" });
     }
@@ -180,7 +117,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-//user's profile
 app.get("/profile/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -197,12 +133,10 @@ app.get("/profile/:userId", async (req, res) => {
 });
 
 
-// to get all user
 app.get("/users/:userId", async (req, res) => {
   try {
     const loggedInUserId = req.params.userId;
 
-    //fetch the logged-in user's connections
     const loggedInuser = await User.findById(loggedInUserId).populate(
       "connections",
       "_id"
@@ -211,12 +145,10 @@ app.get("/users/:userId", async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    //get the ID's of the connected users
     const connectedUserIds = loggedInuser.connections.map(
       (connection) => connection._id
     );
 
-    //find the users who are not connected to the logged-in user Id
     const users = await User.find({
       _id: { $ne: loggedInUserId, $nin: connectedUserIds },
       // verified: { $eq: true },
@@ -228,12 +160,10 @@ app.get("/users/:userId", async (req, res) => {
   }
 });
 
-// to get all users not only verified but all
 app.get("/regusers/:userId", async (req, res) => {
   try {
     const loggedInUserId = req.params.userId;
 
-    //fetch the logged-in user's connections
     const loggedInuser = await User.findById(loggedInUserId).populate(
       "connections",
       "_id"
@@ -242,12 +172,10 @@ app.get("/regusers/:userId", async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    //get the ID's of the connected users
     const connectedUserIds = loggedInuser.connections.map(
       (connection) => connection._id
     );
 
-    //find the users who are not connected to the logged-in user Id
     const users = await User.find({
       _id: { $ne: loggedInUserId, $nin: connectedUserIds },
       verified: { $eq: true },
@@ -259,7 +187,6 @@ app.get("/regusers/:userId", async (req, res) => {
   }
 });
 
-//send a connection request
 app.post("/connection-request", async (req, res) => {
   try {
     const { currentUserId, selectedUserId } = req.body;
@@ -278,7 +205,6 @@ app.post("/connection-request", async (req, res) => {
   }
 });
 
-//endpoint to show all the connections requests
 app.get("/connection-request/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
@@ -296,7 +222,6 @@ app.get("/connection-request/:userId", async (req, res) => {
   }
 });
 
-//endpoint to accept a connection request
 app.post("/connection-request/accept", async (req, res) => {
   try {
     const { senderId, recepientId } = req.body;
@@ -305,9 +230,6 @@ app.post("/connection-request/accept", async (req, res) => {
     const recepient = await User.findById(recepientId);
 
 
-    // below line does
-    // it goes to the userschema then to connections which is in User.schema
-    // then updates the connections array
     sender.connections.push(recepientId);
     recepient.connections.push(senderId);
 
@@ -329,7 +251,6 @@ app.post("/connection-request/accept", async (req, res) => {
   }
 });
 
-//endpoint to fetch all the connections of a user
 app.get("/connections/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -349,7 +270,6 @@ app.get("/connections/:userId", async (req, res) => {
   }
 });
 
-//endpoint to create a post
 app.post("/create", async (req, res) => {
   try {
     const { description, imageUrl, userId } = req.body;
@@ -372,7 +292,6 @@ app.post("/create", async (req, res) => {
 });
 
 
-//endpoint to fetch all the posts
 app.get("/all", async (req, res) => {
   try {
     const posts = await Post.find().populate("user", "name profileImage");
@@ -384,7 +303,6 @@ app.get("/all", async (req, res) => {
   }
 });
 
-//endpoints to like a post
 app.post("/like/:postId/:userId", async (req, res) => {
   try {
     const postId = req.params.postId;
@@ -395,7 +313,6 @@ app.post("/like/:postId/:userId", async (req, res) => {
       return res.status(400).json({ message: "Post not found" });
     }
 
-    //check if the user has already liked the post
     const existingLike = post?.likes.find(
       (like) => like.user.toString() === userId
     );
@@ -415,7 +332,6 @@ app.post("/like/:postId/:userId", async (req, res) => {
   }
 });
 
-//endpoint to update user description
 app.put("/profile/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -428,7 +344,6 @@ app.put("/profile/:userId", async (req, res) => {
     res.status(500).json({ message: "Error updating user profile" });
   }
 });
-// we are getting the creating messages 
 io.on("connection", (socket) => {
   console.log("a user is connected");
 
@@ -441,7 +356,6 @@ io.on("connection", (socket) => {
       const newMessage = new Chat({ senderId, receiverId, message });
       await newMessage.save();
 
-      //emit the message to the receiver
       io.to(receiverId).emit("receiveMessage", newMessage);
     } catch (error) {
       console.log("Error handling the messages");
@@ -457,7 +371,6 @@ http.listen(process.env.NODE_IO_PORT, () => {
 });
 
 
-// we are getting the messages
 app.get("/messages", async (req, res) => {
   try {
     const { senderId, receiverId } = req.query;
@@ -466,7 +379,6 @@ app.get("/messages", async (req, res) => {
     console.log(receiverId);
 
     const messages = await Chat.find({
-      // we are checking if this messages belonged to user and receiver and nobody else
       $or: [
         { senderId: senderId, receiverId: receiverId },
         { senderId: receiverId, receiverId: senderId },
@@ -479,7 +391,6 @@ app.get("/messages", async (req, res) => {
   }
 });
 
-//endpoint to delete the messages;
 
 app.post("/delete",async(req,res) => {
   try{
@@ -526,7 +437,6 @@ app.get("/search", async (req, res) => {
 app.delete('/posts/:id', async (req, res) => {
   try {
       const postId = req.params.id;
-      // Find the post by ID and delete it
       const deletedPost = await Post.findByIdAndDelete(postId);
       if (!deletedPost) {
           return res.status(404).json({ message: 'Post not found' });
@@ -548,17 +458,16 @@ app.delete('/posts/:id', async (req, res) => {
 // Endpoint to update user profile
 app.put('/users/:userId', async (req, res) => {
   const userId = req.params.userId;
-  const updates = req.body; // Assuming the request body contains the updated user profile data
+  const updates = req.body; 
 
   try {
-    // Find the user by ID and update the profile
     const user = await User.findByIdAndUpdate(userId, updates, { new: true });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json(user); // Return the updated user profile
+    res.json(user); 
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
@@ -610,19 +519,17 @@ app.get('/users', async (req, res) => {
 app.post("/regteacher", async (req, res) => {
   try {
     const { email, password } = req.body;
-    // Check if the email is already registeredapp
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       console.log("Email already registered");
       return res.status(400).json({ message: "Email already registered" });
     }
 
-    // Create a new User
     const newUser = new User({
       email,
       password,
-      verified: true, // Set verified to true
-      name: "", // Add name field with default value
+      verified: true, 
+      name: "", 
       profileImage: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/510px-Default_pfp.svg.png", // Add profileImage field with default value
       status: "",
       private: "",
@@ -633,7 +540,6 @@ app.post("/regteacher", async (req, res) => {
       posts: [],
     });
 
-    // Save the new user to the database
     await newUser.save();
     console.log(newUser.verified);
 
@@ -656,7 +562,7 @@ app.get('/alumsearch', async (req, res) => {
       query.alumni = alumni === 'true';
     }
     if (passout) {
-      query.passoutYear = passout.toString(); // Convert passout to string
+      query.passoutYear = passout.toString(); 
     }
     if (branch) {
       query.branch = branch;
